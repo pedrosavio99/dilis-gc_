@@ -377,7 +377,8 @@ let selectedColor = COLORS[0];
 
 // Config state — agora por evento, sem totem
 let cfgEventId = null;
-let cfgPrizes = [];       // event_prizes do evento
+let cfgPrizes = [];
+let cfgDayPlanned = {};       // event_prizes do evento
 let cfgActiveChip = null;
 let cfgDays = {};         // { 'YYYY-MM-DD': { ep_id: qty } }
 let cfgExceptions = new Set();
@@ -612,7 +613,7 @@ async function deleteEvent(id){if(!confirm('Deletar este evento?'))return;try{aw
 
 // ── CONFIG MODAL (distribuição por evento — pool compartilhado) ──
 async function openConfigModal(eventId){
-  cfgEventId=eventId;cfgPrizes=[];cfgDays={};cfgExceptions=new Set();cfgActiveChip=null;
+  cfgEventId=eventId;cfgPrizes=[];cfgDays={};cfgDayPlanned={};cfgExceptions=new Set();cfgActiveChip=null;
   const ev=events.find(x=>x.id===eventId);
   document.getElementById('config-modal-title').textContent=`Distribuição: ${ev.name}`;
   const now=new Date();
@@ -627,11 +628,18 @@ async function openConfigModal(eventId){
 async function loadCfgSchedule(){
   try{
     const rows=await api('GET',`/events/${cfgEventId}/schedule?month=${cfgMonth}`);
-    cfgDays={};cfgExceptions=new Set();
+    cfgDays={};cfgDayPlanned={};cfgExceptions=new Set();
     rows.forEach(row=>{
       const day=row.day.substring(0,10);
       if(row.is_exception)cfgExceptions.add(day);
-      else{if(!cfgDays[day])cfgDays[day]={};cfgDays[day][row.event_prize_id]=row.qty;}
+      else{
+        if(!cfgDays[day])cfgDays[day]={};
+        // mostra saldo real: planejado menos já distribuído neste dia
+        cfgDays[day][row.event_prize_id] = row.remaining_on_day !== undefined ? row.remaining_on_day : row.qty;
+        if(!cfgDayPlanned)cfgDayPlanned={};
+        if(!cfgDayPlanned[day])cfgDayPlanned[day]={};
+        cfgDayPlanned[day][row.event_prize_id] = row.qty;
+      }
     });
   }catch(_){}
 }
@@ -765,8 +773,11 @@ function openDayModal(key){
   if(!cfgPrizes.length){container.innerHTML='<p style="font-size:13px;color:var(--text3);">Nenhum brinde no evento.</p>';
   }else{
     cfgPrizes.forEach(c=>{
+      // cur = saldo restante do dia (planejado - já distribuído)
       const cur=(cfgDays[key]||{})[c.id]||0;
-      const distOutros=distForPrize(c.id)-cur;
+      // planned = valor original planejado (para calcular margem disponível)
+      const planned=(cfgDayPlanned&&cfgDayPlanned[key]&&cfgDayPlanned[key][c.id]!==undefined)?cfgDayPlanned[key][c.id]:cur;
+      const distOutros=distForPrize(c.id)-planned;
       const maxAllowed=Math.max(0,(c.allocated||0)-distOutros);
       const livres=(c.allocated||0)-distForPrize(c.id);
       const row=document.createElement('div');row.className='stepper-row';if(isEx)row.style.opacity='.4';

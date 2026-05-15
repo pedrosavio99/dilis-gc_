@@ -472,12 +472,24 @@ app.delete('/api/events/:event_id/prizes/:id', authMiddleware, async (req, res) 
 // EVENT SCHEDULE — calendário do evento (pool por dia, sem totem)
 // ════════════════════════════════════════
 
-// GET — schedule de um evento num mês
+// GET — schedule de um evento num mês (inclui distribuído por dia para o calendário mostrar saldo real)
 app.get('/api/events/:event_id/schedule', authMiddleware, async (req, res) => {
   const { month } = req.query;
   try {
     let query = `
-      SELECT es.*, ep.prize_id
+      SELECT es.*, ep.prize_id,
+        COALESCE((
+          SELECT SUM(d.quantity) FROM distributions d
+          WHERE d.prize_id = ep.prize_id
+            AND d.event_id = ep.event_id
+            AND DATE(d.distributed_at) = es.day
+        ), 0)::int AS distributed_on_day,
+        GREATEST(0, es.qty - COALESCE((
+          SELECT SUM(d.quantity) FROM distributions d
+          WHERE d.prize_id = ep.prize_id
+            AND d.event_id = ep.event_id
+            AND DATE(d.distributed_at) = es.day
+        ), 0))::int AS remaining_on_day
       FROM event_schedule es
       JOIN event_prizes ep ON es.event_prize_id=ep.id
       WHERE ep.event_id=$1
