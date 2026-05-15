@@ -1,0 +1,10 @@
+postgresql://neondb_owner:npg_R9jgB8rvZNIO@ep-muddy-king-apbwf358.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+
+
+postgresql://neondb_owner:npg_R9jgB8rvZNIO@ep-muddy-king-apbwf358-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+
+BASE_URL
+
+npm run dev

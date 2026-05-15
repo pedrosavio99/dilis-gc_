@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dilis — Gerenciador de Brindes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f0f2f5; --bg2:#ffffff; --bg3:#f5f6f8; --bg4:#eaecf0; --bg5:#dde0e6;
+      --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.13);
+      --text:#111827; --text2:#6b7280; --text3:#9ca3af;
+      --accent:#1a56db; --accent2:#2563eb; --accent-bg:rgba(26,86,219,0.07);
+      --green:#059669; --green-bg:rgba(5,150,105,0.08);
+      --danger:#dc2626; --danger-bg:rgba(220,38,38,0.08);
+      --yellow:#b45309; --yellow-bg:rgba(180,83,9,0.08);
+      --r:7px; --r2:10px; --r3:12px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:4px;}
+
+    /* LOGIN */
+    #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eff6ff 0%,#f0f2f5 60%,#e0f2fe 100%);padding:2rem;}
+    .login-box{width:100%;max-width:420px;background:#fff;border:1px solid var(--border2);border-radius:var(--r3);padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+    .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:2rem;}
+    .login-logo-icon{width:44px;height:44px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 12px rgba(26,86,219,0.25);}
+    .login-logo h1{font-size:21px;font-weight:700;color:var(--accent);letter-spacing:-.5px;} .login-logo span{font-size:12px;color:var(--text3);display:block;}
+    .login-tabs{display:flex;background:var(--bg3);border-radius:var(--r);padding:3px;margin-bottom:1.5rem;border:1px solid var(--border);}
+    .login-tab{flex:1;padding:8px;border:none;background:none;color:var(--text2);font-family:inherit;font-size:13px;font-weight:500;border-radius:5px;cursor:pointer;transition:all .2s;}
+    .login-tab.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,0.1);font-weight:600;}
+    .login-form{display:flex;flex-direction:column;gap:14px;}
+    .form-field{display:flex;flex-direction:column;gap:5px;}
+    .form-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.4px;text-transform:uppercase;}
+    .form-input{padding:10px 13px;background:#fff;border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:inherit;font-size:14px;transition:all .2s;outline:none;}
+    .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
+    .pin-input{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:12px;text-align:center;}
+    .login-btn{padding:12px;border:none;border-radius:var(--r);background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;transition:all .2s;box-shadow:0 2px 8px rgba(26,86,219,0.25);}
+    .login-btn:hover{background:#1648c0;transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,86,219,0.35);}
+    .login-err{font-size:13px;color:var(--danger);text-align:center;min-height:20px;}
+
+    /* APP */
+    #app{display:none;min-height:100vh;}
+    .sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:#fff;border-right:1px solid var(--border2);display:flex;flex-direction:column;z-index:100;}
+    .sidebar-brand{padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border2);}
+    .brand-icon{width:30px;height:30px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+    .brand-name{font-size:17px;font-weight:700;color:var(--accent);letter-spacing:-.5px;}
+    .nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:1px;}
+    .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r);color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;border:none;background:none;font-family:inherit;text-align:left;width:100%;}
+    .nav-item:hover{background:var(--bg3);color:var(--text);}
+    .nav-item.active{background:var(--accent-bg);color:var(--accent);font-weight:600;}
+    .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+    .sidebar-user{padding:12px 14px;border-top:1px solid var(--border2);display:flex;align-items:center;gap:10px;}
+    .user-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+    .user-info{flex:1;min-width:0;}
+    .user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+    .user-email{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .logout-btn{width:26px;height:26px;border-radius:6px;border:none;background:none;color:var(--text3);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+    .logout-btn:hover{background:var(--danger-bg);color:var(--danger);}
+    .main{margin-left:220px;padding:2rem;min-height:100vh;}
+    .page{display:none;} .page.active{display:block;}
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    .page-title{font-size:20px;font-weight:700;color:var(--text);} .page-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+
+    /* CARDS */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+    .card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:18px;transition:all .2s;}
+    .card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.07);}
+    .card-title{font-size:14px;font-weight:600;margin-bottom:6px;color:var(--text);}
+    .card-meta{font-size:12px;color:var(--text2);margin-bottom:4px;}
+    .card-actions{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap;}
+    .access-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-bg);border:1px solid rgba(26,86,219,0.15);border-radius:6px;padding:4px 10px;margin-top:8px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--accent);cursor:pointer;transition:all .15s;}
+    .access-badge:hover{background:rgba(26,86,219,0.12);border-color:var(--accent);}
+    .access-badge-label{font-size:9px;color:var(--text3);font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+    .badge.green{background:var(--green-bg);color:var(--green);} .badge.yellow{background:var(--yellow-bg);color:var(--yellow);}
+    .badge.danger{background:var(--danger-bg);color:var(--danger);} .badge.accent{background:var(--accent-bg);color:var(--accent);}
+    .badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+    /* BOTÕES */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:all .2s;}
+    .btn:hover{background:var(--bg3);border-color:var(--text3);}
+    .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 1px 4px rgba(26,86,219,0.25);}
+    .btn.primary:hover{background:#1648c0;box-shadow:0 3px 10px rgba(26,86,219,0.35);transform:translateY(-1px);}
+    .btn.danger{color:var(--danger);border-color:rgba(220,38,38,0.2);} .btn.danger:hover{background:var(--danger-bg);}
+    .btn.sm{padding:5px 10px;font-size:12px;} .btn.xs{padding:3px 7px;font-size:11px;}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+    /* MODAIS */
+    .overlay{position:fixed;inset:0;background:rgba(17,24,39,0.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem;}
+    .overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:#fff;border:1px solid var(--border2);border-radius:var(--r3);padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:modalIn .2s ease;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
+    .modal.wide{max-width:780px;}
+    @keyframes modalIn{from{opacity:0;transform:scale(.97) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+    .modal-title{font-size:17px;font-weight:700;margin-bottom:18px;color:var(--text);}
+    .modal-footer{display:flex;gap:8px;margin-top:20px;justify-content:flex-end;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-grid .span2{grid-column:span 2;}
+    input[type="text"],input[type="email"],input[type="number"],input[type="date"],select,textarea{padding:9px 12px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:all .2s;width:100%;}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
+    textarea{resize:vertical;min-height:72px;}
+    .color-picker{display:flex;gap:8px;flex-wrap:wrap;}
+    .color-opt{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .15s;}
+    .color-opt.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);}
+    .divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+
+    /* EVENTOS */
+    .event-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;transition:all .2s;margin-bottom:10px;}
+    .event-card:hover{border-color:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,0.07);}
+    .event-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .event-title{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--text);}
+    .event-dates{font-size:12px;color:var(--text2);}
+    .event-body{padding:12px 18px;}
+    .event-totems{display:flex;flex-wrap:wrap;gap:6px;}
+    .totem-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--text2);}
+    .event-footer{padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap;background:var(--bg3);}
+
+    /* STAT */
+    .stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+    .stat-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:12px 16px;flex:1;min-width:110px;}
+    .stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:600;}
+    .stat-val{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);}
+    .stat-val.green{color:var(--green);} .stat-val.yellow{color:var(--yellow);} .stat-val.accent{color:var(--accent);}
+
+    /* CHIPS */
+    .prize-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+    .prize-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;user-select:none;color:var(--text2);}
+    .prize-chip:hover{border-color:var(--accent2);background:var(--bg4);color:var(--text);}
+    .prize-chip.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);font-weight:600;}
+    .chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    .chip-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:0 2px;line-height:1;}
+    .chip-del:hover{color:var(--danger);}
+
+    /* CALENDÁRIO */
+    .cal-wrap{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;}
+    .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+    .cal-head{font-size:10px;color:var(--text3);text-align:center;padding:5px 0;font-weight:700;letter-spacing:.5px;}
+    .day-cell{background:#fff;border:1px solid var(--border);border-radius:7px;padding:5px;min-height:64px;cursor:pointer;position:relative;transition:all .15s;display:flex;flex-direction:column;gap:2px;}
+    .day-cell:hover{border-color:var(--accent2);background:#fafbff;transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,0.07);}
+    .day-cell.empty{background:transparent;border-color:transparent;pointer-events:none;}
+    .day-cell.past{opacity:.35;cursor:default;pointer-events:none;}
+    .day-cell.today{border-color:var(--accent)!important;box-shadow:0 0 0 2px var(--accent-bg);}
+    .day-cell.exception{background:repeating-linear-gradient(135deg,rgba(220,38,38,.03) 0,rgba(220,38,38,.03) 4px,transparent 4px,transparent 10px);border-color:rgba(220,38,38,.2)!important;}
+    .day-num{font-size:10px;color:var(--text3);font-weight:600;}
+    .day-num.today-n{color:var(--accent);font-weight:700;}
+    .day-bars{flex:1;display:flex;flex-direction:column;gap:2px;justify-content:flex-end;}
+    .day-bar-row{display:flex;align-items:center;gap:3px;}
+    .day-bar-track{flex:1;height:4px;border-radius:3px;background:rgba(0,0,0,.06);overflow:hidden;}
+    .day-bar-fill{height:100%;border-radius:3px;transition:width .3s;}
+    .day-bar-lbl{font-size:9px;color:var(--text3);min-width:14px;text-align:right;}
+    .day-bar-lbl.has{color:var(--text2);}
+    .day-total{align-self:flex-end;font-size:9px;font-weight:700;color:var(--text2);background:var(--bg4);border-radius:4px;padding:1px 4px;}
+    .exc-badge{position:absolute;top:3px;right:3px;background:var(--danger-bg);color:var(--danger);font-size:7px;padding:1px 4px;border-radius:4px;font-weight:700;}
+    .cal-controls{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+    input[type="month"]{padding:6px 10px;border-radius:var(--r);border:1px solid var(--border2);font-size:13px;background:#fff;color:var(--text);height:34px;font-family:inherit;}
+
+    /* DAY MODAL */
+    .day-overlay{position:fixed;inset:0;background:rgba(17,24,39,.45);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:900;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem;}
+    .day-overlay.open{opacity:1;pointer-events:all;}
+    .day-modal{background:#fff;border:1px solid var(--border2);border-radius:var(--r3);width:100%;max-width:380px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.14);animation:modalIn .2s ease;}
+    .day-modal-hd{padding:16px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;}
+    .day-modal-title{font-size:16px;font-weight:700;color:var(--text);} .day-modal-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+    .day-close{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:none;color:var(--text2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+    .day-modal-body{padding:12px 18px;}
+    .day-modal-footer{padding:10px 18px 16px;border-top:1px solid var(--border);display:flex;gap:8px;}
+    .day-modal-footer .btn{flex:1;justify-content:center;}
+    .exc-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(220,38,38,.04);border:1px solid rgba(220,38,38,.12);border-radius:var(--r);margin-bottom:12px;}
+    .exc-row.on{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.25);}
+    .exc-label strong{font-size:13px;color:var(--danger);display:block;} .exc-label span{font-size:11px;color:var(--text2);}
+    .toggle{position:relative;width:44px;height:24px;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-track{position:absolute;inset:0;background:#d1d5db;border-radius:12px;cursor:pointer;transition:background .2s;}
+    .toggle-track::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+    .toggle input:checked+.toggle-track{background:var(--danger);}
+    .toggle input:checked+.toggle-track::before{transform:translateX(20px);}
+    .stepper-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px;}
+    .s-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .s-name{flex:1;font-size:13px;font-weight:500;color:var(--text);}
+    .s-info{font-size:11px;color:var(--text3);white-space:nowrap;}
+    .s-info.ok{color:var(--green);} .s-info.low{color:var(--yellow);}
+    .stepper{display:flex;align-items:center;background:#fff;border:1px solid var(--border2);border-radius:8px;overflow:hidden;height:36px;}
+    .stp-btn{width:32px;height:36px;background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;font-family:inherit;}
+    .stp-btn:hover{background:var(--bg3);color:var(--text);}
+    .stp-inp{width:46px;background:none;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);color:var(--text);font-size:14px;text-align:center;font-family:'DM Mono',monospace;font-weight:700;padding:0;height:36px;}
+    .stp-inp:focus{outline:none;}
+    .add-prize-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;}
+    .add-prize-row select{flex:1;min-width:160px;} .add-prize-row input[type="number"]{width:100px;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--text);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 18px;font-size:13px;color:#fff;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
+    .empty-state-icon{font-size:36px;margin-bottom:12px;}
+    .empty-state-title{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:6px;}
+    .dist-table{width:100%;border-collapse:collapse;}
+    .dist-table th{text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);}
+    .dist-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text);}
+    .dist-table tr:hover td{background:var(--bg3);}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">🎪</div>
+      <div><h1 style="color:var(--accent);">dilis</h1><span>Gerenciador de Brindes</span></div>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('login',this)">Entrar</button>
+      <button class="login-tab" onclick="switchLoginTab('register',this)">Criar conta</button>
+    </div>
+    <div id="login-panel" class="login-form">
+      <div class="form-field"><label class="form-label">Email</label><input type="email" id="l-email" class="form-input" placeholder="seu@email.com"></div>
+      <div class="form-field"><label class="form-label">PIN (4 dígitos)</label><input type="password" id="l-pin" class="form-input pin-input" placeholder="••••" maxlength="4" inputmode="numeric"></div>
+      <div class="login-err" id="login-err"></div>
+      <button class="login-btn" onclick="doLogin()">Entrar</button>
+    </div>
+    <div id="register-panel" class="login-form" style="display:none;">
+      <div class="form-field"><label class="form-label">Nome</label><input type="text" id="r-name" class="form-input" placeholder="Ex: Agência Dilis"></div>
+      <div class="form-field"><label class="form-label">Email</label><input type="email" id="r-email" class="form-input" placeholder="seu@email.com"></div>
+      <div class="form-field"><label class="form-label">PIN (4 dígitos)</label><input type="password" id="r-pin" class="form-input pin-input" placeholder="••••" maxlength="4" inputmode="numeric"></div>
+      <div class="login-err" id="register-err"></div>
+      <button class="login-btn" onclick="doRegister()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="brand-icon" style="font-size:14px;">🎪</div><span class="brand-name">dilis</span></div>
+    <nav class="nav">
+      <button class="nav-item active" onclick="goPage('events',this)"><span class="nav-icon">📅</span> Eventos</button>
+      <button class="nav-item" onclick="goPage('totems',this)"><span class="nav-icon">📍</span> Totens</button>
+      <button class="nav-item" onclick="goPage('prizes',this)"><span class="nav-icon">🎁</span> Brindes</button>
+      <button class="nav-item" onclick="goPage('distributions',this)"><span class="nav-icon">📊</span> Distribuições</button>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div class="user-info"><div class="user-name" id="user-name">...</div><div class="user-email" id="user-email"></div></div>
+      <button class="logout-btn" onclick="doLogout()" title="Sair">↪</button>
+    </div>
+  </aside>
+  <main class="main">
+    <div id="page-events" class="page active">
+      <div class="page-header"><div><div class="page-title">Eventos</div><div class="page-sub">Ativações e distribuições</div></div><button class="btn primary" onclick="openEventModal()">+ Novo Evento</button></div>
+      <div id="events-list"></div>
+    </div>
+    <div id="page-totems" class="page">
+      <div class="page-header"><div><div class="page-title">Totens</div><div class="page-sub">Pontos de distribuição neutros</div></div><button class="btn primary" onclick="openTotemModal()">+ Novo Totem</button></div>
+      <div id="totems-list" class="grid"></div>
+    </div>
+    <div id="page-prizes" class="page">
+      <div class="page-header"><div><div class="page-title">Brindes</div><div class="page-sub">Estoque global</div></div><button class="btn primary" onclick="openPrizeModal()">+ Novo Brinde</button></div>
+      <div id="prizes-list" class="grid"></div>
+    </div>
+    <div id="page-distributions" class="page">
+      <div class="page-header"><div><div class="page-title">Distribuições</div><div class="page-sub">Histórico de entregas</div></div></div>
+      <div style="overflow-x:auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);">
+        <table class="dist-table"><thead><tr><th>Evento</th><th>Totem</th><th>Brinde</th><th>Telefone</th><th>Data/Hora</th></tr></thead><tbody id="dist-tbody"></tbody></table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL TOTEM -->
+<div id="totem-modal" class="overlay" onclick="if(event.target===this)closeModal('totem-modal')">
+  <div class="modal">
+    <div class="modal-title" id="totem-modal-title">Novo Totem</div>
+    <div class="form-field" style="margin-bottom:14px;"><label class="form-label">Nome</label><input type="text" id="tm-name" placeholder="Ex: Totem Central"></div>
+    <div class="form-field" style="margin-bottom:14px;"><label class="form-label">Localização</label><input type="text" id="tm-loc" placeholder="Ex: Piso 2"></div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('totem-modal')">Cancelar</button><button class="btn primary" onclick="saveTotem()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- MODAL BRINDE -->
+<div id="prize-modal" class="overlay" onclick="if(event.target===this)closeModal('prize-modal')">
+  <div class="modal">
+    <div class="modal-title" id="prize-modal-title">Novo Brinde</div>
+    <div class="form-grid">
+      <div class="form-field span2"><label class="form-label">Nome</label><input type="text" id="pr-name" placeholder="Ex: Camiseta Edição Limitada"></div>
+      <div class="form-field"><label class="form-label">Estoque Total</label><input type="number" id="pr-stock" placeholder="0" min="0"></div>
+      <div class="form-field"><label class="form-label">Descrição</label><input type="text" id="pr-desc" placeholder="Opcional"></div>
+      <div class="form-field span2"><label class="form-label">Cor</label><div class="color-picker" id="color-picker"></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('prize-modal')">Cancelar</button><button class="btn primary" onclick="savePrize()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- MODAL EVENTO -->
+<div id="event-modal" class="overlay" onclick="if(event.target===this)closeModal('event-modal')">
+  <div class="modal">
+    <div class="modal-title" id="event-modal-title">Novo Evento</div>
+    <div class="form-field" style="margin-bottom:14px;"><label class="form-label">Nome do Evento</label><input type="text" id="ev-name" placeholder="Ex: Ativação Avon — Junho 2025"></div>
+    <div class="form-field" style="margin-bottom:14px;"><label class="form-label">Descrição</label><textarea id="ev-desc" placeholder="Opcional"></textarea></div>
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="form-field"><label class="form-label">Data Início</label><input type="date" id="ev-start"></div>
+      <div class="form-field"><label class="form-label">Data Fim</label><input type="date" id="ev-end"></div>
+    </div>
+    <hr class="divider">
+    <div class="form-field"><label class="form-label">Totens participantes</label><div id="ev-totems-check" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div></div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('event-modal')">Cancelar</button><button class="btn primary" onclick="saveEvent()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- MODAL CONFIG EVENTO -->
+<div id="config-modal" class="overlay" onclick="if(event.target===this)closeModal('config-modal')">
+  <div class="modal wide">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div class="modal-title" id="config-modal-title" style="margin-bottom:0;">Configurar Distribuição</div>
+      <button class="btn sm" onclick="closeModal('config-modal')">Fechar</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row" id="config-stats"></div>
+
+    <!-- Brindes do evento -->
+    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Brindes do Evento</div>
+    <div class="prize-chips" id="config-chips"></div>
+    <div class="add-prize-row">
+      <select id="config-prize-sel" onchange="onCfgPrizeSelChange()"><option value="">Selecione um brinde...</option></select>
+      <input type="number" id="config-prize-qty" min="1" placeholder="Qtd" style="display:none;">
+      <span id="config-prize-hint" style="font-size:11px;color:var(--text3);align-self:center;display:none;"></span>
+      <button class="btn sm primary" onclick="addPrizeToEvent()">+ Adicionar</button>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Calendário do evento (pool compartilhado) -->
+    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">
+      Calendário — quantos brindes distribuir por dia
+      <span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:6px;">Todos os totens do evento consomem deste pool</span>
+    </div>
+    <div class="cal-controls">
+      <input type="month" id="config-month" onchange="loadCfgCal()">
+      <button class="btn sm primary" onclick="autoDistribuir()">⟳ Auto-distribuir</button>
+      <button class="btn sm danger" onclick="limparMes()">Limpar mês</button>
+    </div>
+    <div class="cal-wrap"><div class="cal" id="config-cal"></div></div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR DIA -->
+<div id="day-modal" class="day-overlay" onclick="if(event.target===this)closeDayModal()">
+  <div class="day-modal">
+    <div class="day-modal-hd">
+      <div><div class="day-modal-title" id="day-title">Dia</div><div class="day-modal-sub" id="day-sub"></div></div>
+      <button class="day-close" onclick="closeDayModal()">✕</button>
+    </div>
+    <div class="day-modal-body">
+      <div class="exc-row" id="exc-row">
+        <div class="exc-label"><strong>🚫 Dia sem evento</strong><span>Nenhuma distribuição neste dia</span></div>
+        <label class="toggle"><input type="checkbox" id="exc-toggle" onchange="onExcToggle()"><span class="toggle-track"></span></label>
+      </div>
+      <div id="day-steppers"></div>
+    </div>
+    <div class="day-modal-footer">
+      <button class="btn primary" onclick="salvarDia()">Salvar</button>
+      <button class="btn" onclick="closeDayModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = window.location.origin + '/api';
+const COLORS = ['#6c63ff','#3dd68c','#ff9f43','#ff5c5c','#c084fc','#38bdf8','#f5c542','#fb7185','#34d399','#60a5fa'];
+
+let token = localStorage.getItem('brinde_token') || '';
+let me = null;
+let totems = [], prizes = [], events = [];
+let editTotemId = null, editPrizeId = null, editEventId = null;
+let selectedColor = COLORS[0];
+
+// Config state — agora por evento, sem totem
+let cfgEventId = null;
+let cfgPrizes = [];       // event_prizes do evento
+let cfgActiveChip = null;
+let cfgDays = {};         // { 'YYYY-MM-DD': { ep_id: qty } }
+let cfgExceptions = new Set();
+let cfgMonth = '';
+let cfgDayEditing = null;
+let cfgDayInputs = {};
+
+// ── Utils ──
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2500);
+}
+function hdrs() { return { 'Content-Type': 'application/json', 'x-client-token': token }; }
+async function api(method, path, body) {
+  const res = await fetch(API + path, { method, headers: hdrs(), body: body ? JSON.stringify(body) : undefined });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Erro');
+  return data;
+}
+function todayStr() { return new Date().toISOString().substring(0, 10); }
+function daysInMonth(ym) { const [y,m] = ym.split('-').map(Number); return new Date(y,m,0).getDate(); }
+function monthKeys(ym) { return Array.from({length:daysInMonth(ym)},(_,i)=>`${ym}-${String(i+1).padStart(2,'0')}`); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function switchLoginTab(tab, btn) {
+  document.querySelectorAll('.login-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('login-panel').style.display = tab==='login'?'flex':'none';
+  document.getElementById('register-panel').style.display = tab==='register'?'flex':'none';
+}
+function goPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='totems') loadTotems();
+  else if(name==='prizes') loadPrizes();
+  else if(name==='events') loadEvents();
+  else if(name==='distributions') loadDistributions();
+}
+
+// ── AUTH ──
+async function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pin = document.getElementById('l-pin').value.trim();
+  document.getElementById('login-err').textContent = '';
+  try {
+    const r = await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,pin})});
+    const data = await r.json();
+    if(!r.ok) throw new Error(data.error);
+    token = data.token; localStorage.setItem('brinde_token',token); me = data.client; enterApp();
+  } catch(e) { document.getElementById('login-err').textContent = e.message; }
+}
+async function doRegister() {
+  const name = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const pin = document.getElementById('r-pin').value.trim();
+  document.getElementById('register-err').textContent = '';
+  try {
+    const r = await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,pin})});
+    const data = await r.json();
+    if(!r.ok) throw new Error(data.error);
+    token = data.token; localStorage.setItem('brinde_token',token); me = data.client; enterApp();
+  } catch(e) { document.getElementById('register-err').textContent = e.message; }
+}
+async function doLogout() {
+  try { await api('POST','/auth/logout'); } catch(_) {}
+  token=''; me=null; localStorage.removeItem('brinde_token');
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+}
+function enterApp() {
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  const initials = me.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('user-avatar').textContent = initials;
+  document.getElementById('user-name').textContent = me.name;
+  document.getElementById('user-email').textContent = me.email;
+  loadEvents(); loadTotems(); loadPrizes();
+}
+window.addEventListener('load', async () => {
+  renderColorPicker();
+  if(!token) return;
+  try {
+    const r = await fetch(API+'/auth/me',{headers:{'x-client-token':token}});
+    if(!r.ok){localStorage.removeItem('brinde_token');token='';return;}
+    me = await r.json(); enterApp();
+  } catch(_) {}
+});
+
+// ── TOTENS ──
+async function loadTotems() {
+  try { totems = await api('GET','/totems'); renderTotems(); } catch(e) { toast('Erro ao carregar totens'); }
+}
+function renderTotems() {
+  const el = document.getElementById('totems-list');
+  if(!totems.length){el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📍</div><div class="empty-state-title">Nenhum totem cadastrado</div></div>`;return;}
+  el.innerHTML = totems.map(t=>`
+    <div class="card">
+      <div class="card-title">${t.name}</div>
+      <div class="card-meta">📍 ${t.location||'Sem localização'}</div>
+      <div class="access-badge" onclick="copyId('${t.access_id}')">
+        <span class="access-badge-label">ID do Totem</span>${t.access_id}<span style="font-size:10px;opacity:.5;">⎘</span>
+      </div>
+      <div class="card-actions">
+        <button class="btn sm" onclick="editTotem(${t.id})">Editar</button>
+        <button class="btn sm danger" onclick="deleteTotem(${t.id})">Deletar</button>
+      </div>
+    </div>`).join('');
+}
+function copyId(id){navigator.clipboard.writeText(id).then(()=>toast(`✓ Copiado: ${id}`));}
+function openTotemModal(){editTotemId=null;document.getElementById('totem-modal-title').textContent='Novo Totem';document.getElementById('tm-name').value='';document.getElementById('tm-loc').value='';openModal('totem-modal');}
+function editTotem(id){const t=totems.find(x=>x.id===id);if(!t)return;editTotemId=id;document.getElementById('totem-modal-title').textContent='Editar Totem';document.getElementById('tm-name').value=t.name;document.getElementById('tm-loc').value=t.location||'';openModal('totem-modal');}
+async function saveTotem(){
+  const name=document.getElementById('tm-name').value.trim();const location=document.getElementById('tm-loc').value.trim();
+  if(!name){toast('Nome obrigatório');return;}
+  try{if(editTotemId)await api('PUT',`/totems/${editTotemId}`,{name,location});else await api('POST','/totems',{name,location});toast(editTotemId?'✓ Totem atualizado!':'✓ Totem criado!');closeModal('totem-modal');loadTotems();}catch(e){toast('Erro: '+e.message);}
+}
+async function deleteTotem(id){if(!confirm('Deletar este totem?'))return;try{await api('DELETE',`/totems/${id}`);toast('✓ Deletado');loadTotems();}catch(e){toast('Erro: '+e.message);}}
+
+// ── BRINDES ──
+async function loadPrizes(){try{prizes=await api('GET','/prizes');renderPrizes();}catch(e){toast('Erro ao carregar brindes');}}
+function renderPrizes(){
+  const el=document.getElementById('prizes-list');
+  if(!prizes.length){el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🎁</div><div class="empty-state-title">Nenhum brinde cadastrado</div></div>`;return;}
+  el.innerHTML=prizes.map(p=>{
+    const reservado=p.reserved_by_events||0;
+    const disponivel=p.available_stock!==undefined?p.available_stock:p.stock;
+    return `<div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:20px;height:20px;background:${p.color};border-radius:6px;flex-shrink:0;"></div>
+        <div class="card-title" style="margin:0;">${p.name}</div>
+      </div>
+      ${p.description?`<div class="card-meta" style="margin-bottom:8px;">${p.description}</div>`:''}
+      <div style="display:flex;gap:8px;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;">Total</div><div style="font-size:18px;font-weight:700;">${p.stock}</div></div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;">Reservado</div><div style="font-size:18px;font-weight:700;color:var(--yellow);">${reservado}</div></div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;">Livre</div><div style="font-size:18px;font-weight:700;color:${disponivel>0?'var(--green)':'var(--danger)'};">${disponivel}</div></div>
+      </div>
+      <div class="card-actions"><button class="btn sm" onclick="editPrize(${p.id})">Editar</button><button class="btn sm danger" onclick="deletePrize(${p.id})">Deletar</button></div>
+    </div>`;}).join('');
+}
+function openPrizeModal(){editPrizeId=null;selectedColor=COLORS[0];renderColorPicker();document.getElementById('prize-modal-title').textContent='Novo Brinde';document.getElementById('pr-name').value='';document.getElementById('pr-stock').value='';document.getElementById('pr-desc').value='';openModal('prize-modal');}
+function editPrize(id){const p=prizes.find(x=>x.id===id);if(!p)return;editPrizeId=id;selectedColor=p.color;renderColorPicker();document.getElementById('prize-modal-title').textContent='Editar Brinde';document.getElementById('pr-name').value=p.name;document.getElementById('pr-stock').value=p.stock;document.getElementById('pr-desc').value=p.description||'';openModal('prize-modal');}
+async function savePrize(){
+  const name=document.getElementById('pr-name').value.trim();const stock=parseInt(document.getElementById('pr-stock').value)||0;const description=document.getElementById('pr-desc').value.trim();
+  if(!name){toast('Nome obrigatório');return;}
+  try{if(editPrizeId)await api('PUT',`/prizes/${editPrizeId}`,{name,stock,color:selectedColor,description});else await api('POST','/prizes',{name,stock,color:selectedColor,description});toast(editPrizeId?'✓ Brinde atualizado!':'✓ Brinde criado!');closeModal('prize-modal');loadPrizes();}catch(e){toast('Erro: '+e.message);}
+}
+async function deletePrize(id){if(!confirm('Deletar este brinde?'))return;try{await api('DELETE',`/prizes/${id}`);toast('✓ Deletado');loadPrizes();}catch(e){toast('Erro: '+e.message);}}
+function renderColorPicker(){document.getElementById('color-picker').innerHTML=COLORS.map(c=>`<div class="color-opt${c===selectedColor?' sel':''}" style="background:${c}" onclick="selectedColor='${c}';renderColorPicker()"></div>`).join('');}
+
+// ── EVENTOS ──
+async function loadEvents(){try{events=await api('GET','/events');renderEvents();}catch(e){toast('Erro ao carregar eventos');}}
+function renderEvents(){
+  const el=document.getElementById('events-list');
+  if(!events.length){el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-title">Nenhum evento criado</div></div>`;return;}
+  const today=todayStr();
+  el.innerHTML=events.map(ev=>{
+    const start=ev.date_start?ev.date_start.substring(0,10):'';
+    const end=ev.date_end?ev.date_end.substring(0,10):'';
+    const isActive=today>=start&&today<=end&&ev.status==='ativo';
+    const isPast=today>end;
+    const statusLabel=isActive?'Ativo agora':isPast?'Encerrado':'Em breve';
+    const statusClass=isActive?'green':isPast?'danger':'yellow';
+    const totemsList=(ev.totems||[]).map(t=>`<div class="totem-chip">📍 ${t.name} <span style="font-size:10px;color:var(--text3);font-family:monospace;">${t.access_id}</span></div>`).join('');
+    return `<div class="event-card">
+      <div class="event-header">
+        <div>
+          <div class="event-title">${ev.name}</div>
+          <div class="event-dates">📅 ${fmtDate(start)} — ${fmtDate(end)}</div>
+          ${ev.description?`<div style="font-size:12px;color:var(--text3);margin-top:4px;">${ev.description}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+          <span class="badge ${statusClass}"><span class="badge-dot"></span>${statusLabel}</span>
+          <div style="font-size:11px;color:var(--text3);">${ev.prize_count||0} brinde(s) · ${ev.total_allocated||0} unid.</div>
+        </div>
+      </div>
+      <div class="event-body">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Totens</div>
+        <div class="event-totems">${totemsList||'<span style="font-size:12px;color:var(--text3);">Nenhum totem associado</span>'}</div>
+      </div>
+      <div class="event-footer">
+        <button class="btn sm primary" onclick="openConfigModal(${ev.id})">⚙ Configurar Distribuição</button>
+        <button class="btn sm" onclick="editEvent(${ev.id})">Editar</button>
+        <button class="btn sm danger" onclick="deleteEvent(${ev.id})">Deletar</button>
+      </div>
+    </div>`;}).join('');
+}
+function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
+function openEventModal(){
+  editEventId=null;document.getElementById('event-modal-title').textContent='Novo Evento';
+  document.getElementById('ev-name').value='';document.getElementById('ev-desc').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';
+  document.getElementById('ev-totems-check').innerHTML=totems.map(t=>`<label style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" value="${t.id}" style="accent-color:var(--accent);"> ${t.name}</label>`).join('');
+  openModal('event-modal');
+}
+function editEvent(id){
+  const ev=events.find(x=>x.id===id);if(!ev)return;editEventId=id;
+  document.getElementById('event-modal-title').textContent='Editar Evento';
+  document.getElementById('ev-name').value=ev.name;document.getElementById('ev-desc').value=ev.description||'';
+  document.getElementById('ev-start').value=ev.date_start?ev.date_start.substring(0,10):'';
+  document.getElementById('ev-end').value=ev.date_end?ev.date_end.substring(0,10):'';
+  const evTotemIds=(ev.totems||[]).map(t=>t.id);
+  document.getElementById('ev-totems-check').innerHTML=totems.map(t=>`<label style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" value="${t.id}" ${evTotemIds.includes(t.id)?'checked':''} style="accent-color:var(--accent);"> ${t.name}</label>`).join('');
+  openModal('event-modal');
+}
+async function saveEvent(){
+  const name=document.getElementById('ev-name').value.trim();const description=document.getElementById('ev-desc').value.trim();
+  const date_start=document.getElementById('ev-start').value;const date_end=document.getElementById('ev-end').value;
+  const totem_ids=[...document.querySelectorAll('#ev-totems-check input:checked')].map(i=>parseInt(i.value));
+  if(!name||!date_start||!date_end){toast('Preencha nome e datas');return;}
+  if(date_start>date_end){toast('Data início deve ser anterior à data fim');return;}
+  try{
+    if(editEventId){
+      await api('PUT',`/events/${editEventId}`,{name,description,date_start,date_end});
+      const ev=await api('GET',`/events/${editEventId}`);
+      const currentIds=(ev.totems||[]).map(t=>t.id);
+      for(const tid of currentIds){if(!totem_ids.includes(tid))await api('DELETE',`/events/${editEventId}/totems/${tid}`);}
+      for(const tid of totem_ids){if(!currentIds.includes(tid))await api('POST',`/events/${editEventId}/totems`,{totem_id:tid});}
+      toast('✓ Evento atualizado!');
+    }else{await api('POST','/events',{name,description,date_start,date_end,totem_ids});toast('✓ Evento criado!');}
+    closeModal('event-modal');loadEvents();
+  }catch(e){toast('Erro: '+e.message);}
+}
+async function deleteEvent(id){if(!confirm('Deletar este evento?'))return;try{await api('DELETE',`/events/${id}`);toast('✓ Deletado');loadEvents();}catch(e){toast('Erro: '+e.message);}}
+
+// ── CONFIG MODAL (distribuição por evento — pool compartilhado) ──
+async function openConfigModal(eventId){
+  cfgEventId=eventId;cfgPrizes=[];cfgDays={};cfgExceptions=new Set();cfgActiveChip=null;
+  const ev=events.find(x=>x.id===eventId);
+  document.getElementById('config-modal-title').textContent=`Distribuição: ${ev.name}`;
+  const now=new Date();
+  cfgMonth=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('config-month').value=cfgMonth;
+  try{cfgPrizes=await api('GET',`/events/${cfgEventId}/prizes`);if(cfgPrizes.length)cfgActiveChip=cfgPrizes[0].id;}catch(_){}
+  await loadCfgSchedule();
+  populateCfgPrizeSelect();renderCfgChips();renderCfgStats();renderCfgCal();
+  openModal('config-modal');
+}
+
+async function loadCfgSchedule(){
+  try{
+    const rows=await api('GET',`/events/${cfgEventId}/schedule?month=${cfgMonth}`);
+    cfgDays={};cfgExceptions=new Set();
+    rows.forEach(row=>{
+      const day=row.day.substring(0,10);
+      if(row.is_exception)cfgExceptions.add(day);
+      else{if(!cfgDays[day])cfgDays[day]={};cfgDays[day][row.event_prize_id]=row.qty;}
+    });
+  }catch(_){}
+}
+
+async function loadCfgCal(){
+  cfgMonth=document.getElementById('config-month').value||cfgMonth;
+  await loadCfgSchedule();renderCfgCal();renderCfgChips();renderCfgStats();
+}
+
+function distForPrize(epId){return Object.values(cfgDays).reduce((s,d)=>s+(d[epId]||0),0);}
+
+function renderCfgStats(){
+  const total=cfgPrizes.reduce((s,c)=>s+(c.allocated||0),0);
+  const planejado=cfgPrizes.reduce((s,c)=>s+distForPrize(c.id),0);
+  const restante=Math.max(0,total-planejado);
+  document.getElementById('config-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Alocado no evento</div><div class="stat-val accent">${total}</div></div>
+    <div class="stat-card"><div class="stat-label">Planejado no calendário</div><div class="stat-val green">${planejado}</div></div>
+    <div class="stat-card"><div class="stat-label">Sem dia definido</div><div class="stat-val yellow">${restante}</div></div>`;
+}
+
+function populateCfgPrizeSelect(){
+  const atribuidos=cfgPrizes.map(c=>c.prize_id);
+  const disponiveis=prizes.filter(p=>!atribuidos.includes(p.id));
+  const sel=document.getElementById('config-prize-sel');
+  sel.innerHTML='<option value="">Selecione um brinde...</option>';
+  disponiveis.forEach(p=>{const livre=p.available_stock!==undefined?p.available_stock:p.stock;sel.innerHTML+=`<option value="${p.id}" data-livre="${livre}">${p.name} — ${livre} livre(s) de ${p.stock}</option>`;});
+  document.getElementById('config-prize-qty').style.display='none';document.getElementById('config-prize-hint').style.display='none';
+}
+
+function onCfgPrizeSelChange(){
+  const sel=document.getElementById('config-prize-sel');const opt=sel.options[sel.selectedIndex];
+  const qty=document.getElementById('config-prize-qty');const hint=document.getElementById('config-prize-hint');
+  if(!sel.value){qty.style.display='none';hint.style.display='none';return;}
+  const livre=parseInt(opt.dataset.livre)||0;
+  qty.style.display='block';qty.max=livre;qty.value='';qty.placeholder=`1–${livre}`;
+  hint.style.display='inline';hint.textContent=`${livre} disponível(is)`;
+  hint.style.color=livre>0?'var(--green)':'var(--danger)';
+}
+
+function renderCfgChips(){
+  const wrap=document.getElementById('config-chips');
+  if(!cfgPrizes.length){wrap.innerHTML='<span style="font-size:12px;color:var(--text3);">Nenhum brinde adicionado ao evento.</span>';return;}
+  wrap.innerHTML=cfgPrizes.map(c=>`
+    <div class="prize-chip${cfgActiveChip===c.id?' active':''}" onclick="setCfgActiveChip(${c.id})">
+      <div class="chip-dot" style="background:${c.color}"></div>
+      ${c.prize_name}
+      <span style="font-size:10px;color:var(--text3);">${distForPrize(c.id)}/${c.allocated} planejado(s)</span>
+      <button class="chip-del" onclick="event.stopPropagation();removePrizeFromEvent(${c.id})">✕</button>
+    </div>`).join('');
+}
+
+function setCfgActiveChip(id){cfgActiveChip=id;renderCfgChips();renderCfgCal();}
+
+async function addPrizeToEvent(){
+  const prizeId=parseInt(document.getElementById('config-prize-sel').value);
+  const qty=parseInt(document.getElementById('config-prize-qty').value)||0;
+  if(!prizeId){toast('Selecione um brinde');return;}if(qty<=0){toast('Informe a quantidade');return;}
+  try{
+    await api('POST',`/events/${cfgEventId}/prizes`,{prize_id:prizeId,allocated:qty});
+    toast('✓ Brinde adicionado ao evento!');
+    const[newPrizes,newGlobal]=await Promise.all([api('GET',`/events/${cfgEventId}/prizes`),api('GET','/prizes')]);
+    cfgPrizes=newPrizes;prizes=newGlobal;
+    if(!cfgActiveChip&&cfgPrizes.length)cfgActiveChip=cfgPrizes[0].id;
+    populateCfgPrizeSelect();renderCfgChips();renderCfgStats();renderCfgCal();
+    document.getElementById('config-prize-sel').value='';document.getElementById('config-prize-qty').style.display='none';document.getElementById('config-prize-hint').style.display='none';
+  }catch(e){toast('Erro: '+e.message);}
+}
+
+async function removePrizeFromEvent(id){
+  if(!confirm('Remover este brinde do evento?'))return;
+  try{
+    await api('DELETE',`/events/${cfgEventId}/prizes/${id}`);toast('✓ Brinde removido');
+    const[newPrizes,newGlobal]=await Promise.all([api('GET',`/events/${cfgEventId}/prizes`),api('GET','/prizes')]);
+    cfgPrizes=newPrizes;prizes=newGlobal;
+    if(cfgActiveChip===id)cfgActiveChip=cfgPrizes.length?cfgPrizes[0].id:null;
+    Object.keys(cfgDays).forEach(k=>{delete cfgDays[k][id];});
+    populateCfgPrizeSelect();renderCfgChips();renderCfgStats();renderCfgCal();
+  }catch(e){toast('Erro: '+e.message);}
+}
+
+// ── CALENDÁRIO ──
+function renderCfgCal(){
+  cfgMonth=document.getElementById('config-month').value||cfgMonth;
+  const cal=document.getElementById('config-cal');cal.innerHTML='';
+  ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'].forEach(h=>{const d=document.createElement('div');d.className='cal-head';d.textContent=h;cal.appendChild(d);});
+  const[y,m]=cfgMonth.split('-').map(Number);
+  const firstDay=new Date(y,m-1,1).getDay();const dcount=daysInMonth(cfgMonth);const tk=todayStr();
+  const typeMaxes={};
+  cfgPrizes.forEach(c=>{typeMaxes[c.id]=Math.max(1,...monthKeys(cfgMonth).map(k=>(cfgDays[k]||{})[c.id]||0));});
+  for(let i=0;i<firstDay;i++){const e=document.createElement('div');e.className='day-cell empty';cal.appendChild(e);}
+  for(let d=1;d<=dcount;d++){
+    const key=`${cfgMonth}-${String(d).padStart(2,'0')}`;
+    const dayData=cfgDays[key]||{};const isToday=key===tk;const isPast=key<tk;const isException=cfgExceptions.has(key);
+    const totalQty=cfgPrizes.reduce((s,c)=>s+(dayData[c.id]||0),0);
+    const cell=document.createElement('div');
+    let cls='day-cell';if(isToday)cls+=' today';if(isPast)cls+=' past';else if(isException)cls+=' exception';
+    cell.className=cls;if(!isPast)cell.onclick=()=>openDayModal(key);
+    const num=document.createElement('div');num.className='day-num'+(isToday?' today-n':'');num.textContent=d;cell.appendChild(num);
+    if(!isPast&&!isException&&cfgPrizes.length){
+      const bars=document.createElement('div');bars.className='day-bars';
+      cfgPrizes.forEach(c=>{
+        const qty=dayData[c.id]||0;const pct=typeMaxes[c.id]>0?(qty/typeMaxes[c.id])*100:0;
+        if(qty>0||cfgActiveChip===c.id){
+          const row=document.createElement('div');row.className='day-bar-row';
+          const track=document.createElement('div');track.className='day-bar-track';
+          const fill=document.createElement('div');fill.className='day-bar-fill';fill.style.background=c.color;fill.style.width=pct+'%';fill.style.opacity=qty===0?'0.2':'1';
+          track.appendChild(fill);
+          const lbl=document.createElement('div');lbl.className='day-bar-lbl'+(qty>0?' has':'');lbl.textContent=qty;
+          row.appendChild(track);row.appendChild(lbl);bars.appendChild(row);
+        }
+      });cell.appendChild(bars);
+    }
+    if(totalQty>0){const tot=document.createElement('div');tot.className='day-total';tot.textContent='∑'+totalQty;cell.appendChild(tot);}
+    if(isException){const exc=document.createElement('div');exc.className='exc-badge';exc.textContent='FECHADO';cell.appendChild(exc);}
+    cal.appendChild(cell);
+  }
+}
+
+// ── DAY MODAL ──
+function openDayModal(key){
+  cfgDayEditing=key;cfgDayInputs={};
+  const[y,m,d]=key.split('-');const dateObj=new Date(parseInt(y),parseInt(m)-1,parseInt(d));
+  const weekday=dateObj.toLocaleDateString('pt-BR',{weekday:'long'});
+  const formatted=dateObj.toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('day-title').textContent=weekday.charAt(0).toUpperCase()+weekday.slice(1)+', '+parseInt(d);
+  document.getElementById('day-sub').textContent=formatted;
+  const isEx=cfgExceptions.has(key);
+  document.getElementById('exc-toggle').checked=isEx;document.getElementById('exc-row').classList.toggle('on',isEx);
+  const container=document.getElementById('day-steppers');container.innerHTML='';
+  if(!cfgPrizes.length){container.innerHTML='<p style="font-size:13px;color:var(--text3);">Nenhum brinde no evento.</p>';
+  }else{
+    cfgPrizes.forEach(c=>{
+      const cur=(cfgDays[key]||{})[c.id]||0;
+      const distOutros=distForPrize(c.id)-cur;
+      const maxAllowed=Math.max(0,(c.allocated||0)-distOutros);
+      const livres=(c.allocated||0)-distForPrize(c.id);
+      const row=document.createElement('div');row.className='stepper-row';if(isEx)row.style.opacity='.4';
+      const dot=document.createElement('div');dot.className='s-dot';dot.style.background=c.color;
+      const name=document.createElement('div');name.className='s-name';name.textContent=c.prize_name;
+      const info=document.createElement('div');info.className='s-info '+(livres>0?'low':'ok');info.textContent=livres>0?`${livres} sem dia`:'tudo planejado';
+      const stepper=document.createElement('div');stepper.className='stepper';
+      const btnM=document.createElement('button');btnM.className='stp-btn';btnM.textContent='−';if(isEx)btnM.disabled=true;
+      const inp=document.createElement('input');inp.type='number';inp.className='stp-inp';inp.value=cur;inp.min=0;inp.max=maxAllowed;if(isEx)inp.disabled=true;
+      const btnP=document.createElement('button');btnP.className='stp-btn';btnP.textContent='+';if(isEx)btnP.disabled=true;
+      btnM.onclick=()=>{inp.value=Math.max(0,(parseInt(inp.value)||0)-1);};
+      btnP.onclick=()=>{const v=(parseInt(inp.value)||0)+1;if(v<=maxAllowed)inp.value=v;else toast(`Máximo: ${maxAllowed}`);};
+      stepper.appendChild(btnM);stepper.appendChild(inp);stepper.appendChild(btnP);
+      row.appendChild(dot);row.appendChild(name);row.appendChild(info);row.appendChild(stepper);
+      container.appendChild(row);cfgDayInputs[c.id]=inp;
+    });
+  }
+  document.getElementById('day-modal').classList.add('open');
+}
+function closeDayModal(){document.getElementById('day-modal').classList.remove('open');cfgDayEditing=null;}
+function onExcToggle(){
+  const isEx=document.getElementById('exc-toggle').checked;
+  document.getElementById('exc-row').classList.toggle('on',isEx);
+  document.querySelectorAll('#day-steppers .stepper-row').forEach(r=>{r.style.opacity=isEx?'.4':'';r.querySelectorAll('button,input').forEach(el=>el.disabled=isEx);});
+}
+
+async function salvarDia(){
+  const key=cfgDayEditing;const isEx=document.getElementById('exc-toggle').checked;
+  if(isEx){cfgExceptions.add(key);if(!cfgDays[key])cfgDays[key]={};cfgPrizes.forEach(c=>{cfgDays[key][c.id]=0;});}
+  else{cfgExceptions.delete(key);if(!cfgDays[key])cfgDays[key]={};for(const[id,inp]of Object.entries(cfgDayInputs)){cfgDays[key][parseInt(id)]=parseInt(inp.value)||0;}}
+  const items=cfgPrizes.map(c=>({event_prize_id:c.id,qty:cfgDays[key][c.id]||0}));
+  closeDayModal();renderCfgCal();renderCfgChips();renderCfgStats();
+  try{
+    await api('POST',`/events/${cfgEventId}/schedule/day`,{day:key,is_exception:isEx,items:isEx?[]:items});
+    toast(isEx?'🚫 Dia fechado salvo!':'✓ Salvo!');
+  }catch(e){toast('Erro: '+e.message);}
+}
+
+function autoDistribuir(){
+  if(!cfgActiveChip){toast('Selecione um brinde nos chips');return;}
+  const prize=cfgPrizes.find(c=>c.id===cfgActiveChip);if(!prize)return;
+  const tk=todayStr();
+  const keys=monthKeys(cfgMonth).filter(k=>k>=tk&&!cfgExceptions.has(k));
+  if(!keys.length){toast('Nenhum dia disponível');return;}
+  const fixedDist=monthKeys(cfgMonth).filter(k=>k<tk).reduce((s,k)=>s+((cfgDays[k]||{})[cfgActiveChip]||0),0);
+  const remaining=(prize.allocated||0)-fixedDist;
+  if(remaining<=0){toast('Estoque esgotado');return;}
+  const perDay=Math.floor(remaining/keys.length);const resto=remaining-perDay*keys.length;
+  keys.forEach((k,i)=>{if(!cfgDays[k])cfgDays[k]={};cfgDays[k][cfgActiveChip]=perDay+(i<resto?1:0);});
+  renderCfgCal();renderCfgChips();renderCfgStats();
+  toast(`${prize.prize_name}: ${perDay}${resto?'–'+(perDay+1):''}/dia em ${keys.length} dias`);
+  saveScheduleBatch(keys);
+}
+
+async function limparMes(){
+  if(!cfgActiveChip){toast('Selecione um brinde');return;}
+  const prize=cfgPrizes.find(c=>c.id===cfgActiveChip);
+  const tk=todayStr();const keys=monthKeys(cfgMonth).filter(k=>k>=tk);
+  keys.forEach(k=>{if(!cfgDays[k])cfgDays[k]={};cfgDays[k][cfgActiveChip]=0;});
+  renderCfgCal();renderCfgChips();renderCfgStats();toast(`${prize.prize_name}: mês limpo`);
+  saveScheduleBatch(keys);
+}
+
+async function saveScheduleBatch(keys){
+  let erros=0;
+  for(const key of keys){
+    try{
+      const items=cfgPrizes.map(c=>({event_prize_id:c.id,qty:(cfgDays[key]||{})[c.id]||0}));
+      await api('POST',`/events/${cfgEventId}/schedule/day`,{day:key,is_exception:false,items});
+    }catch(_){erros++;}
+  }
+  if(erros)toast(`⚠ ${erros} dias falharam`);else toast('✓ Calendário salvo!');
+}
+
+// ── DISTRIBUIÇÕES ──
+async function loadDistributions(){
+  try{
+    const data=await api('GET','/distributions');
+    const tbody=document.getElementById('dist-tbody');
+    if(!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text3);">Nenhuma distribuição registrada</td></tr>';return;}
+    tbody.innerHTML=data.map(d=>`<tr><td>${d.event_name||'—'}</td><td>${d.totem_name}</td><td>${d.prize_name}</td><td>${d.user_phone||'—'}</td><td style="color:var(--text2);font-size:12px;">${new Date(d.distributed_at).toLocaleString('pt-BR')}</td></tr>`).join('');
+  }catch(e){toast('Erro ao carregar distribuições');}
+}
+</script>
+</body>
+</html>
