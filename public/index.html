@@ -809,15 +809,21 @@ async function openDayModal(key) {
     container.innerHTML='<p style="font-size:13px;color:var(--text3);">Nenhum brinde no evento.</p>';
   } else {
     cfgPrizes.forEach(c => {
+      // savedQty = total planejado para o dia (salvo no banco)
+      // dist      = já entregue hoje (imutável, piso do planejado)
+      // disponivel = o que ainda pode ser distribuído hoje = savedQty - dist
+      // O stepper exibe "disponível" e o usuário edita esse valor.
+      // Ao salvar, o banco recebe dist + valor_do_stepper (novo total planejado).
       const savedQty = (cfgDays[key]||{})[c.id] || 0;
       const dist = (cfgDistributed[key]||{})[c.id] || 0;
+      const disponivel = Math.max(0, savedQty - dist);
 
-      // distTotal vem do cfgPrizes recém-buscado — sempre correto
-      const distTotal = c.distributed_total || 0;
+      // Máximo que pode ser adicionado como disponível neste dia =
+      // allocated - planejadoOutros - dist  (o dist já "ocupou" slot permanentemente)
       const planejadoOutros = Object.entries(cfgDays)
         .filter(([k]) => k !== key)
         .reduce((s, [, dObj]) => s + (dObj[c.id] || 0), 0);
-      const maxAllowed = Math.max(dist, Math.max(0, c.allocated - distTotal - planejadoOutros));
+      const maxDisponivel = Math.max(0, c.allocated - planejadoOutros - dist);
 
       const semDia = cfgUnscheduled[c.id] || 0;
 
@@ -826,7 +832,7 @@ async function openDayModal(key) {
       const name=document.createElement('div'); name.className='s-name'; name.textContent=c.prize_name;
 
       let infoText, infoCls;
-      if(dist>0){ infoText=`${dist}/${savedQty} entregue(s)`; infoCls='s-info ok'; }
+      if(dist>0){ infoText=`${dist} entregue(s) hoje`; infoCls='s-info ok'; }
       else if(semDia>0){ infoText=`${semDia} s/dia`; infoCls='s-info low'; }
       else { infoText='tudo planejado'; infoCls='s-info ok'; }
       const info=document.createElement('div'); info.className=infoCls; info.textContent=infoText;
@@ -834,10 +840,11 @@ async function openDayModal(key) {
       const stepper=document.createElement('div'); stepper.className='stepper';
       const btnM=document.createElement('button'); btnM.className='stp-btn'; btnM.textContent='−'; if(isEx)btnM.disabled=true;
       const inp=document.createElement('input'); inp.type='number'; inp.className='stp-inp';
-      inp.value=Math.min(savedQty, maxAllowed); inp.min=dist; inp.max=maxAllowed; if(isEx)inp.disabled=true;
+      // Stepper mostra disponivel (o que ainda pode sair hoje), não o total planejado
+      inp.value=disponivel; inp.min=0; inp.max=maxDisponivel; if(isEx)inp.disabled=true;
       const btnP=document.createElement('button'); btnP.className='stp-btn'; btnP.textContent='+'; if(isEx)btnP.disabled=true;
-      btnM.onclick=()=>{ inp.value=Math.max(dist, (parseInt(inp.value)||0)-1); };
-      btnP.onclick=()=>{ const v=(parseInt(inp.value)||0)+1; if(v<=maxAllowed)inp.value=v; else toast(`Máximo: ${maxAllowed}`); };
+      btnM.onclick=()=>{ inp.value=Math.max(0, (parseInt(inp.value)||0)-1); };
+      btnP.onclick=()=>{ const v=(parseInt(inp.value)||0)+1; if(v<=maxDisponivel)inp.value=v; else toast(`Máximo: ${maxDisponivel} disponível(is)`); };
       stepper.appendChild(btnM); stepper.appendChild(inp); stepper.appendChild(btnP);
       row.appendChild(dot); row.appendChild(name); row.appendChild(info); row.appendChild(stepper);
       container.appendChild(row);
@@ -867,14 +874,17 @@ async function salvarDia() {
     cfgExceptions.delete(key);
     if(!cfgDays[key]) cfgDays[key]={};
     for(const [id,inp] of Object.entries(cfgDayInputs)) {
-      cfgDays[key][parseInt(id)] = parseInt(inp.value)||0;
+      const epId = parseInt(id);
+      const distHoje = (cfgDistributed[key]||{})[epId] || 0;
+      // inp.value é o disponível desejado; banco armazena total = dist + disponível
+      cfgDays[key][epId] = distHoje + (parseInt(inp.value)||0);
     }
   }
 
   closeDayModal();
   renderCfgCal(); renderCfgChips(); renderCfgStats();
 
-  // Salva no servidor
+  // Salva no servidor — qty é sempre o total planejado (dist + disponível)
   const items = cfgPrizes.map(c => ({ event_prize_id: c.id, qty: cfgDays[key][c.id]||0 }));
   try {
     await api('POST', `/events/${cfgEventId}/schedule/day`, { day: key, is_exception: isEx, items: isEx?[]:items });
