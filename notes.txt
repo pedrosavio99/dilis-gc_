@@ -8,3 +8,5 @@ postgresql://neondb_owner:npg_R9jgB8rvZNIO@ep-muddy-king-apbwf358-pooler.c-7.us-
 BASE_URL
 
 npm run dev
+
+http://localhost:3000/totem.html

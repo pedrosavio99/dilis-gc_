@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dilis — Gerenciador de Brindes</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:#f0f2f5;--bg2:#ffffff;--bg3:#f5f6f8;--bg4:#eaecf0;--bg5:#dde0e6;
@@ -14,37 +14,43 @@
       --green:#059669;--green-bg:rgba(5,150,105,0.08);
       --danger:#dc2626;--danger-bg:rgba(220,38,38,0.08);
       --yellow:#b45309;--yellow-bg:rgba(180,83,9,0.08);
+      --purple:#7c3aed;--purple-bg:rgba(124,58,237,0.08);
       --r:7px;--r2:10px;--r3:12px;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    body{font-family:'Syne',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
     ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:4px;}
+
+    /* LOGIN */
     #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eff6ff 0%,#f0f2f5 60%,#e0f2fe 100%);padding:2rem;}
     .login-box{width:100%;max-width:420px;background:#fff;border:1px solid var(--border2);border-radius:var(--r3);padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
     .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:2rem;}
     .login-logo-icon{width:44px;height:44px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;}
-    .login-logo h1{font-size:21px;font-weight:700;color:var(--accent);letter-spacing:-.5px;}.login-logo span{font-size:12px;color:var(--text3);display:block;}
+    .login-logo h1{font-size:21px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}.login-logo span{font-size:12px;color:var(--text3);display:block;}
     .login-tabs{display:flex;background:var(--bg3);border-radius:var(--r);padding:3px;margin-bottom:1.5rem;border:1px solid var(--border);}
     .login-tab{flex:1;padding:8px;border:none;background:none;color:var(--text2);font-family:inherit;font-size:13px;font-weight:500;border-radius:5px;cursor:pointer;transition:all .2s;}
-    .login-tab.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,0.1);font-weight:600;}
+    .login-tab.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,0.1);font-weight:700;}
     .login-form{display:flex;flex-direction:column;gap:14px;}
     .form-field{display:flex;flex-direction:column;gap:5px;}
-    .form-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.4px;text-transform:uppercase;}
+    .form-label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.4px;text-transform:uppercase;}
     .form-input{padding:10px 13px;background:#fff;border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:inherit;font-size:14px;transition:all .2s;outline:none;}
     .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
-    .pin-input{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:12px;text-align:center;}
-    .login-btn{padding:12px;border:none;border-radius:var(--r);background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;transition:all .2s;}
+    .pin-input{font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:12px;text-align:center;}
+    .login-btn{padding:12px;border:none;border-radius:var(--r);background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;transition:all .2s;}
     .login-btn:hover{background:#1648c0;}
     .login-err{font-size:13px;color:var(--danger);text-align:center;min-height:20px;}
+
+    /* APP */
     #app{display:none;min-height:100vh;}
     .sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:#fff;border-right:1px solid var(--border2);display:flex;flex-direction:column;z-index:100;}
     .sidebar-brand{padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border2);}
     .brand-icon{width:30px;height:30px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-    .brand-name{font-size:17px;font-weight:700;color:var(--accent);letter-spacing:-.5px;}
+    .brand-name{font-size:17px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}
     .nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:1px;}
+    .nav-section{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding:8px 10px 4px;}
     .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r);color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;border:none;background:none;font-family:inherit;text-align:left;width:100%;}
     .nav-item:hover{background:var(--bg3);color:var(--text);}
-    .nav-item.active{background:var(--accent-bg);color:var(--accent);font-weight:600;}
+    .nav-item.active{background:var(--accent-bg);color:var(--accent);font-weight:700;}
     .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
     .sidebar-user{padding:12px 14px;border-top:1px solid var(--border2);display:flex;align-items:center;gap:10px;}
     .user-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
@@ -56,64 +62,79 @@
     .main{margin-left:220px;padding:2rem;min-height:100vh;}
     .page{display:none;}.page.active{display:block;}
     .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
-    .page-title{font-size:20px;font-weight:700;}.page-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+    .page-title{font-size:20px;font-weight:800;}.page-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+
+    /* CARDS & GRIDS */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
     .card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:18px;transition:all .2s;}
     .card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.07);}
-    .card-title{font-size:14px;font-weight:600;margin-bottom:6px;}
+    .card-title{font-size:14px;font-weight:700;margin-bottom:6px;}
     .card-meta{font-size:12px;color:var(--text2);margin-bottom:4px;}
     .card-actions{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap;}
-    .access-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-bg);border:1px solid rgba(26,86,219,0.15);border-radius:6px;padding:4px 10px;margin-top:8px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--accent);cursor:pointer;transition:all .15s;}
-    .access-badge:hover{background:rgba(26,86,219,0.12);}
-    .access-badge-label{font-size:9px;color:var(--text3);font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
-    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
-    .badge.green{background:var(--green-bg);color:var(--green);}.badge.yellow{background:var(--yellow-bg);color:var(--yellow);}
-    .badge.danger{background:var(--danger-bg);color:var(--danger);}.badge.accent{background:var(--accent-bg);color:var(--accent);}
+
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+    .badge.green{background:var(--green-bg);color:var(--green);}
+    .badge.yellow{background:var(--yellow-bg);color:var(--yellow);}
+    .badge.danger{background:var(--danger-bg);color:var(--danger);}
+    .badge.accent{background:var(--accent-bg);color:var(--accent);}
+    .badge.purple{background:var(--purple-bg);color:var(--purple);}
     .badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:all .2s;}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:all .2s;}
     .btn:hover{background:var(--bg3);}
     .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
     .btn.primary:hover{background:#1648c0;transform:translateY(-1px);}
     .btn.danger{color:var(--danger);border-color:rgba(220,38,38,0.2);}.btn.danger:hover{background:var(--danger-bg);}
+    .btn.purple{background:var(--purple);border-color:var(--purple);color:#fff;}.btn.purple:hover{background:#6d28d9;}
     .btn.sm{padding:5px 10px;font-size:12px;}.btn.xs{padding:3px 7px;font-size:11px;}
     .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+    /* MODALS */
     .overlay{position:fixed;inset:0;background:rgba(17,24,39,0.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem;}
     .overlay.open{opacity:1;pointer-events:all;}
     .modal{background:#fff;border:1px solid var(--border2);border-radius:var(--r3);padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:modalIn .2s ease;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
-    .modal.wide{max-width:800px;}
+    .modal.wide{max-width:820px;}.modal.xl{max-width:1000px;}
     @keyframes modalIn{from{opacity:0;transform:scale(.97) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
-    .modal-title{font-size:17px;font-weight:700;margin-bottom:18px;}
+    .modal-title{font-size:17px;font-weight:800;margin-bottom:18px;}
     .modal-footer{display:flex;gap:8px;margin-top:20px;justify-content:flex-end;}
+
+    /* FORMS */
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     .form-grid .span2{grid-column:span 2;}
     input[type="text"],input[type="email"],input[type="number"],input[type="date"],select,textarea{padding:9px 12px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:all .2s;width:100%;}
     input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
     textarea{resize:vertical;min-height:72px;}
-    .color-picker{display:flex;gap:8px;flex-wrap:wrap;}
-    .color-opt{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .15s;}
-    .color-opt.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);}
-    .divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+
+    /* EVENTS */
     .event-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;transition:all .2s;margin-bottom:10px;}
     .event-card:hover{border-color:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,0.07);}
     .event-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
-    .event-title{font-size:14px;font-weight:700;margin-bottom:3px;}
+    .event-title{font-size:14px;font-weight:800;margin-bottom:3px;}
     .event-dates{font-size:12px;color:var(--text2);}
     .event-body{padding:12px 18px;}
     .event-totems{display:flex;flex-wrap:wrap;gap:6px;}
     .totem-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--text2);}
     .event-footer{padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap;background:var(--bg3);}
+
+    /* STATS */
     .stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
     .stat-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:12px 16px;flex:1;min-width:110px;}
-    .stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:600;}
-    .stat-val{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;}
+    .stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:700;}
+    .stat-val{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;}
     .stat-val.green{color:var(--green);}.stat-val.yellow{color:var(--yellow);}.stat-val.accent{color:var(--accent);}
+
+    /* CHIPS */
     .prize-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-    .prize-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;user-select:none;color:var(--text2);}
+    .prize-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;user-select:none;color:var(--text2);}
     .prize-chip:hover{border-color:var(--accent2);}
-    .prize-chip.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);font-weight:600;}
+    .prize-chip.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);}
     .chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
     .chip-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:0 2px;line-height:1;}
     .chip-del:hover{color:var(--danger);}
+
+    /* CALENDAR */
     .cal-wrap{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;}
     .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
     .cal-head{font-size:10px;color:var(--text3);text-align:center;padding:5px 0;font-weight:700;letter-spacing:.5px;}
@@ -123,8 +144,8 @@
     .day-cell.past{opacity:.35;cursor:default;pointer-events:none;}
     .day-cell.today{border-color:var(--accent)!important;box-shadow:0 0 0 2px var(--accent-bg);}
     .day-cell.exception{background:repeating-linear-gradient(135deg,rgba(220,38,38,.03) 0,rgba(220,38,38,.03) 4px,transparent 4px,transparent 10px);border-color:rgba(220,38,38,.2)!important;}
-    .day-num{font-size:10px;color:var(--text3);font-weight:600;}
-    .day-num.today-n{color:var(--accent);font-weight:700;}
+    .day-num{font-size:10px;color:var(--text3);font-weight:700;}
+    .day-num.today-n{color:var(--accent);}
     .day-bars{flex:1;display:flex;flex-direction:column;gap:2px;justify-content:flex-end;}
     .day-bar-row{display:flex;align-items:center;gap:3px;}
     .day-bar-track{flex:1;height:4px;border-radius:3px;background:rgba(0,0,0,.06);overflow:hidden;}
@@ -135,11 +156,13 @@
     .exc-badge{position:absolute;top:3px;right:3px;background:var(--danger-bg);color:var(--danger);font-size:7px;padding:1px 4px;border-radius:4px;font-weight:700;}
     .cal-controls{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
     input[type="month"]{padding:6px 10px;border-radius:var(--r);border:1px solid var(--border2);font-size:13px;background:#fff;color:var(--text);height:34px;font-family:inherit;}
+
+    /* DAY MODAL */
     .day-overlay{position:fixed;inset:0;background:rgba(17,24,39,.45);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:900;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem;}
     .day-overlay.open{opacity:1;pointer-events:all;}
     .day-modal{background:#fff;border:1px solid var(--border2);border-radius:var(--r3);width:100%;max-width:380px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.14);animation:modalIn .2s ease;}
     .day-modal-hd{padding:16px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;}
-    .day-modal-title{font-size:16px;font-weight:700;}.day-modal-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+    .day-modal-title{font-size:16px;font-weight:800;}.day-modal-sub{font-size:11px;color:var(--text3);margin-top:2px;}
     .day-close{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:none;color:var(--text2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
     .day-modal-body{padding:12px 18px;}
     .day-modal-footer{padding:10px 18px 16px;border-top:1px solid var(--border);display:flex;gap:8px;}
@@ -153,31 +176,81 @@
     .toggle-track::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
     .toggle input:checked+.toggle-track{background:var(--danger);}
     .toggle input:checked+.toggle-track::before{transform:translateX(20px);}
+
+    /* STEPPERS */
     .stepper-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px;}
     .s-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-    .s-name{flex:1;font-size:13px;font-weight:500;}
+    .s-name{flex:1;font-size:13px;font-weight:600;}
     .s-info{font-size:11px;color:var(--text3);white-space:nowrap;}
     .s-info.ok{color:var(--green);}.s-info.low{color:var(--yellow);}
     .stepper{display:flex;align-items:center;background:#fff;border:1px solid var(--border2);border-radius:8px;overflow:hidden;height:36px;}
     .stp-btn{width:32px;height:36px;background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;font-family:inherit;}
     .stp-btn:hover{background:var(--bg3);}
-    .stp-inp{width:46px;background:none;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);color:var(--text);font-size:14px;text-align:center;font-family:'DM Mono',monospace;font-weight:700;padding:0;height:36px;}
+    .stp-inp{width:46px;background:none;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);color:var(--text);font-size:14px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;padding:0;height:36px;}
     .stp-inp:focus{outline:none;}
     .add-prize-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;}
     .add-prize-row select{flex:1;min-width:160px;}.add-prize-row input[type="number"]{width:100px;}
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--text);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 18px;font-size:13px;color:#fff;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2);}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-    .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
-    .empty-state-icon{font-size:36px;margin-bottom:12px;}
-    .empty-state-title{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:6px;}
+
+    /* TABLES */
     .dist-table{width:100%;border-collapse:collapse;}
-    .dist-table th{text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);}
+    .dist-table th{text-align:left;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);}
     .dist-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);}
     .dist-table tr:hover td{background:var(--bg3);}
+
+    /* ACTIVATION KEY */
+    .key-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:8px;}
+    .key-text{flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);word-break:break-all;letter-spacing:.5px;}
+    .key-masked{color:var(--text3);}
+    .key-warning{font-size:11px;color:var(--yellow);background:var(--yellow-bg);border:1px solid rgba(180,83,9,.2);border-radius:var(--r);padding:8px 12px;margin-top:8px;}
+
+    /* TIERS */
+    .tier-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:8px;}
+    .tier-header{padding:12px 16px;display:flex;align-items:center;gap:10px;background:var(--bg3);border-bottom:1px solid var(--border);}
+    .tier-order{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .tier-name{font-size:14px;font-weight:700;flex:1;}
+    .tier-band{font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace;}
+    .tier-body{padding:12px 16px;}
+    .tier-pool{display:flex;flex-wrap:wrap;gap:8px;}
+    .pool-item{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;}
+    .pool-weight{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);background:#fff;border:1px solid var(--border);border-radius:4px;padding:1px 5px;}
+    .no-prize-tier{font-size:12px;color:var(--text3);font-style:italic;}
+
+    /* METRICS */
+    .metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px;}
+    .metric-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:16px;}
+    .metric-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;}
+    .metric-val{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;}
+    .metric-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+    .progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:8px;}
+    .progress-fill{height:100%;border-radius:3px;transition:width .4s;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--text);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 18px;font-size:13px;color:#fff;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    /* EMPTY */
+    .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
+    .empty-state-icon{font-size:36px;margin-bottom:12px;}
+    .empty-state-title{font-size:15px;font-weight:700;color:var(--text2);margin-bottom:6px;}
+
+    .divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+    .color-picker{display:flex;gap:8px;flex-wrap:wrap;}
+    .color-opt{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .15px;}
+    .color-opt.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);}
+
+    /* TAB NAV */
+    .tab-nav{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:3px;gap:2px;margin-bottom:16px;}
+    .tab-btn{flex:1;padding:7px 12px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--text2);border-radius:5px;cursor:pointer;transition:all .15s;}
+    .tab-btn.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+    .tab-content{display:none;}.tab-content.active{display:block;}
+
+    /* SECTION HEADERS */
+    .section-hd{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
   </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
@@ -204,13 +277,16 @@
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <aside class="sidebar">
     <div class="sidebar-brand"><div class="brand-icon">🎪</div><span class="brand-name">dilis</span></div>
     <nav class="nav">
+      <div class="nav-section">Operação</div>
       <button class="nav-item active" onclick="goPage('events',this)"><span class="nav-icon">📅</span> Eventos</button>
       <button class="nav-item" onclick="goPage('totems',this)"><span class="nav-icon">📍</span> Totens</button>
       <button class="nav-item" onclick="goPage('prizes',this)"><span class="nav-icon">🎁</span> Brindes</button>
+      <div class="nav-section">Dados</div>
       <button class="nav-item" onclick="goPage('distributions',this)"><span class="nav-icon">📊</span> Distribuições</button>
     </nav>
     <div class="sidebar-user">
@@ -219,19 +295,36 @@
       <button class="logout-btn" onclick="doLogout()">↪</button>
     </div>
   </aside>
+
   <main class="main">
+    <!-- EVENTOS -->
     <div id="page-events" class="page active">
-      <div class="page-header"><div><div class="page-title">Eventos</div><div class="page-sub">Ativações e distribuições</div></div><button class="btn primary" onclick="openEventModal()">+ Novo Evento</button></div>
+      <div class="page-header">
+        <div><div class="page-title">Eventos</div><div class="page-sub">Ativações e distribuições</div></div>
+        <button class="btn primary" onclick="openEventModal()">+ Novo Evento</button>
+      </div>
       <div id="events-list"></div>
     </div>
+
+    <!-- TOTENS -->
     <div id="page-totems" class="page">
-      <div class="page-header"><div><div class="page-title">Totens</div><div class="page-sub">Pontos de distribuição</div></div><button class="btn primary" onclick="openTotemModal()">+ Novo Totem</button></div>
+      <div class="page-header">
+        <div><div class="page-title">Totens</div><div class="page-sub">Pontos de distribuição</div></div>
+        <button class="btn primary" onclick="openTotemModal()">+ Novo Totem</button>
+      </div>
       <div id="totems-list" class="grid"></div>
     </div>
+
+    <!-- BRINDES -->
     <div id="page-prizes" class="page">
-      <div class="page-header"><div><div class="page-title">Brindes</div><div class="page-sub">Estoque global</div></div><button class="btn primary" onclick="openPrizeModal()">+ Novo Brinde</button></div>
+      <div class="page-header">
+        <div><div class="page-title">Brindes</div><div class="page-sub">Estoque global</div></div>
+        <button class="btn primary" onclick="openPrizeModal()">+ Novo Brinde</button>
+      </div>
       <div id="prizes-list" class="grid"></div>
     </div>
+
+    <!-- DISTRIBUIÇÕES -->
     <div id="page-distributions" class="page">
       <div class="page-header"><div><div class="page-title">Distribuições</div><div class="page-sub">Histórico</div></div></div>
       <div style="overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:var(--r2);">
@@ -241,7 +334,7 @@
   </main>
 </div>
 
-<!-- MODAL TOTEM -->
+<!-- ═══ MODAL TOTEM ═══ -->
 <div id="totem-modal" class="overlay" onclick="if(event.target===this)closeModal('totem-modal')">
   <div class="modal">
     <div class="modal-title" id="totem-modal-title">Novo Totem</div>
@@ -251,7 +344,7 @@
   </div>
 </div>
 
-<!-- MODAL BRINDE -->
+<!-- ═══ MODAL BRINDE ═══ -->
 <div id="prize-modal" class="overlay" onclick="if(event.target===this)closeModal('prize-modal')">
   <div class="modal">
     <div class="modal-title" id="prize-modal-title">Novo Brinde</div>
@@ -265,7 +358,7 @@
   </div>
 </div>
 
-<!-- MODAL EVENTO -->
+<!-- ═══ MODAL EVENTO ═══ -->
 <div id="event-modal" class="overlay" onclick="if(event.target===this)closeModal('event-modal')">
   <div class="modal">
     <div class="modal-title" id="event-modal-title">Novo Evento</div>
@@ -281,37 +374,211 @@
   </div>
 </div>
 
-<!-- MODAL CONFIG EVENTO -->
+<!-- ═══ MODAL CONFIG EVENTO (distribição + ativações + faixas + métricas) ═══ -->
 <div id="config-modal" class="overlay" onclick="if(event.target===this)closeModal('config-modal')">
-  <div class="modal wide">
+  <div class="modal xl">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <div class="modal-title" id="config-modal-title" style="margin-bottom:0;">Configurar Distribuição</div>
+      <div class="modal-title" id="config-modal-title" style="margin-bottom:0;">Configurar Evento</div>
       <button class="btn sm" onclick="closeModal('config-modal')">Fechar</button>
     </div>
-    <div class="stat-row" id="config-stats"></div>
-    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Brindes do Evento</div>
-    <div class="prize-chips" id="config-chips"></div>
-    <div class="add-prize-row">
-      <select id="config-prize-sel" onchange="onCfgPrizeSelChange()"><option value="">Selecione um brinde...</option></select>
-      <input type="number" id="config-prize-qty" min="1" placeholder="Qtd" style="display:none;">
-      <span id="config-prize-hint" style="font-size:11px;color:var(--text3);align-self:center;display:none;"></span>
-      <button class="btn sm primary" onclick="addPrizeToEvent()">+ Adicionar</button>
+
+    <!-- Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchConfigTab('distribuicao',this)">📦 Distribuição</button>
+      <button class="tab-btn" onclick="switchConfigTab('ativacoes',this)">🎮 Ativações</button>
+      <button class="tab-btn" onclick="switchConfigTab('faixas',this)">🏆 Faixas</button>
+      <button class="tab-btn" onclick="switchConfigTab('metricas',this)">📊 Métricas</button>
+      <button class="tab-btn" onclick="switchConfigTab('rodadas',this)">🎲 Rodadas</button>
     </div>
-    <hr class="divider">
-    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">
-      Calendário
-      <span style="font-size:10px;font-weight:400;margin-left:6px;">Pool compartilhado entre todos os totens</span>
+
+    <!-- TAB: Distribuição -->
+    <div id="cfg-tab-distribuicao" class="tab-content active">
+      <div class="stat-row" id="config-stats"></div>
+      <div class="section-hd">Brindes do Evento</div>
+      <div class="prize-chips" id="config-chips"></div>
+      <div class="add-prize-row">
+        <select id="config-prize-sel" onchange="onCfgPrizeSelChange()"><option value="">Selecione um brinde...</option></select>
+        <input type="number" id="config-prize-qty" min="1" placeholder="Qtd" style="display:none;">
+        <span id="config-prize-hint" style="font-size:11px;color:var(--text3);align-self:center;display:none;"></span>
+        <button class="btn sm primary" onclick="addPrizeToEvent()">+ Adicionar</button>
+      </div>
+      <hr class="divider">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="section-hd" style="margin-bottom:0;">Calendário</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <input type="month" id="config-month" onchange="loadCfgCal()">
+          <button class="btn sm primary" onclick="autoDistribuir()">⟳ Auto-distribuir</button>
+          <button class="btn sm danger" onclick="limparMes()">Limpar mês</button>
+        </div>
+      </div>
+      <div class="cal-wrap"><div class="cal" id="config-cal"></div></div>
     </div>
-    <div class="cal-controls">
-      <input type="month" id="config-month" onchange="loadCfgCal()">
-      <button class="btn sm primary" onclick="autoDistribuir()">⟳ Auto-distribuir</button>
-      <button class="btn sm danger" onclick="limparMes()">Limpar mês</button>
+
+    <!-- TAB: Ativações -->
+    <div id="cfg-tab-ativacoes" class="tab-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="section-hd" style="margin-bottom:0;">Ativações (Unity)</div>
+        <button class="btn sm primary" onclick="openActivationModal()">+ Nova Ativação</button>
+      </div>
+      <div id="activations-list"></div>
     </div>
-    <div class="cal-wrap"><div class="cal" id="config-cal"></div></div>
+
+    <!-- TAB: Faixas de Premiação -->
+    <div id="cfg-tab-faixas" class="tab-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div class="section-hd" style="margin-bottom:0;">Faixas por Tipo de Jogo</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="tiers-gametype-filter" onchange="renderTiers()" style="width:180px;">
+            <option value="">Todos os tipos</option>
+            <option value="SCORE_ENDLESS">Score Endless</option>
+            <option value="JACKPOT_ROSACEA">Jackpot Rosácea</option>
+            <option value="SCORE_TIMED">Score Timed</option>
+            <option value="DISCRETE_SPIN">Discrete Spin</option>
+          </select>
+          <button class="btn sm primary" onclick="openTierModal()">+ Nova Faixa</button>
+        </div>
+      </div>
+      <div id="tiers-list"></div>
+    </div>
+
+    <!-- TAB: Métricas -->
+    <div id="cfg-tab-metricas" class="tab-content">
+      <div class="section-hd">Hoje</div>
+      <div id="metrics-today" class="metrics-grid"></div>
+      <div class="section-hd" style="margin-top:8px;">Estoque Inicial vs Atual</div>
+      <div id="metrics-stock"></div>
+      <div class="section-hd" style="margin-top:16px;">Histórico por Dia</div>
+      <div id="metrics-history" style="overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:var(--r2);">
+        <table class="dist-table"><thead><tr><th>Data</th><th>Brinde</th><th>Distribuídos</th></tr></thead><tbody id="metrics-history-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- TAB: Rodadas Unity -->
+    <div id="cfg-tab-rodadas" class="tab-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="section-hd" style="margin-bottom:0;">Rodadas via Unity</div>
+        <button class="btn sm" onclick="loadRounds()">↻ Atualizar</button>
+      </div>
+      <div id="rounds-stats" class="stat-row" style="margin-bottom:16px;"></div>
+      <div style="overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:var(--r2);">
+        <table class="dist-table">
+          <thead><tr>
+            <th>Horário</th><th>Ativação</th><th>Game Type</th>
+            <th>Pontuação</th><th>Faixa</th><th>Brinde</th><th>Resultado</th>
+          </tr></thead>
+          <tbody id="rounds-tbody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- MODAL DIA -->
+<!-- ═══ MODAL ATIVAÇÃO ═══ -->
+<div id="activation-modal" class="overlay" onclick="if(event.target===this)closeModal('activation-modal')">
+  <div class="modal">
+    <div class="modal-title">Nova Ativação</div>
+    <div class="form-field" style="margin-bottom:12px;"><label class="form-label">Nome</label><input type="text" id="act-name" placeholder="ex: Totem Principal"></div>
+    <div class="form-field" style="margin-bottom:12px;"><label class="form-label">Localização</label><input type="text" id="act-loc" placeholder="ex: Entrada do Shopping"></div>
+    <div class="form-field" style="margin-bottom:12px;">
+      <label class="form-label">Tipo de Jogo</label>
+      <select id="act-gametype">
+        <option value="SCORE_ENDLESS">Score Endless</option>
+        <option value="JACKPOT_ROSACEA">Jackpot Rosácea</option>
+        <option value="SCORE_TIMED">Score Timed</option>
+        <option value="DISCRETE_SPIN">Discrete Spin</option>
+      </select>
+    </div>
+    <div id="act-key-result" style="display:none;">
+      <hr class="divider">
+      <div class="section-hd">Unity Key gerada</div>
+      <div class="key-box"><div class="key-text" id="act-key-text"></div><button class="btn sm" onclick="copyKey()">⎘ Copiar</button></div>
+      <div class="key-warning">⚠️ Guarde esta chave agora. Por segurança, ela não será exibida novamente neste formato completo.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeActivationModal()">Fechar</button>
+      <button class="btn primary" id="act-save-btn" onclick="saveActivation()">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL VER KEY ═══ -->
+<div id="key-modal" class="overlay" onclick="if(event.target===this)closeModal('key-modal')">
+  <div class="modal">
+    <div class="modal-title">Unity Key</div>
+    <div class="section-hd">Ativação</div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;" id="key-modal-actname"></div>
+    <div class="key-box"><div class="key-text" id="key-modal-text"></div><button class="btn sm" onclick="copyKeyModal()">⎘ Copiar</button></div>
+    <div class="key-warning">⚠️ Não compartilhe esta chave publicamente. Ela autentica a ativação na API Unity.</div>
+    <div class="modal-footer"><button class="btn primary" onclick="closeModal('key-modal')">Fechar</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL FAIXA ═══ -->
+<div id="tier-modal" class="overlay" onclick="if(event.target===this)closeModal('tier-modal')">
+  <div class="modal">
+    <div class="modal-title" id="tier-modal-title">Nova Faixa</div>
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="form-field span2"><label class="form-label">Nome da Faixa</label><input type="text" id="tier-name" placeholder="ex: Nível Ouro"></div>
+      <div class="form-field">
+        <label class="form-label">Tipo de Jogo</label>
+        <select id="tier-gametype">
+          <option value="SCORE_ENDLESS">Score Endless</option>
+          <option value="JACKPOT_ROSACEA">Jackpot Rosácea</option>
+          <option value="SCORE_TIMED">Score Timed</option>
+          <option value="DISCRETE_SPIN">Discrete Spin</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Ordem</label>
+        <input type="number" id="tier-order" min="0" value="0">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Tipo de Resultado</label>
+        <select id="tier-outcome">
+          <option value="PRIZE">Com prêmio</option>
+          <option value="NO_PRIZE">Participação (sem prêmio)</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Modo do Critério</label>
+        <select id="tier-bandtype" onchange="onBandTypeChange()">
+          <option value="interval">Intervalo (score min/max)</option>
+          <option value="discrete">Discreto (valor único)</option>
+        </select>
+      </div>
+    </div>
+    <div id="tier-interval-fields" class="form-grid" style="margin-bottom:14px;">
+      <div class="form-field"><label class="form-label">Score Mínimo</label><input type="number" id="tier-scoremin" min="0"></div>
+      <div class="form-field"><label class="form-label">Score Máximo</label><input type="number" id="tier-scoremax" min="0"></div>
+    </div>
+    <div id="tier-discrete-fields" style="display:none;margin-bottom:14px;">
+      <div class="form-field"><label class="form-label">Valor Discreto (ex: nº de rosáceas)</label><input type="number" id="tier-discreteval" min="0"></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('tier-modal')">Cancelar</button><button class="btn primary" onclick="saveTier()">Salvar Faixa</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL POOL DA FAIXA ═══ -->
+<div id="pool-modal" class="overlay" onclick="if(event.target===this)closeModal('pool-modal')">
+  <div class="modal wide">
+    <div class="modal-title" id="pool-modal-title">Pool de Brindes</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--text2);">
+      💡 <strong>Como funciona:</strong> Probabilidade do brinde = <code style="font-family:JetBrains Mono,monospace">peso_configurado × estoque_restante</code> dividido pela soma de todos no pool.
+    </div>
+    <div class="section-hd">Brindes nesta faixa</div>
+    <div id="pool-current-gifts" style="margin-bottom:12px;"></div>
+    <hr class="divider">
+    <div class="section-hd">Adicionar brinde ao pool</div>
+    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+      <div style="flex:1;min-width:160px;"><label class="form-label" style="font-size:10px;">Brinde</label><select id="pool-prize-sel" style="margin-top:4px;"></select></div>
+      <div style="width:100px;"><label class="form-label" style="font-size:10px;">Peso</label><input type="number" id="pool-weight" min="0.1" step="0.1" value="1" style="margin-top:4px;"></div>
+      <button class="btn sm primary" onclick="addGiftToPool()">+ Adicionar</button>
+    </div>
+    <div class="modal-footer"><button class="btn primary" onclick="closeModal('pool-modal')">Fechar</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL DIA ═══ -->
 <div id="day-modal" class="day-overlay" onclick="if(event.target===this)closeDayModal()">
   <div class="day-modal">
     <div class="day-modal-hd">
@@ -345,23 +612,11 @@ let editTotemId = null, editPrizeId = null, editEventId = null;
 let selectedColor = COLORS[0];
 
 // ── CONFIG STATE ──
-// Regra clara de estado:
-//   cfgDays[day][ep_id] = qty PLANEJADA salva no banco (não saldo, não distribuído)
-//   cfgDistributed[day][ep_id] = qty JÁ DISTRIBUÍDA naquele dia (vem do banco, só leitura)
-//   cfgExceptions = Set de days marcados como fechados
-//   cfgUnscheduled[ep_id] = qty sem dia definido (vem do servidor, calculado globalmente)
-//   cfgPrizes = array de event_prizes com allocated, distributed_total, etc.
+let cfgEventId = null, cfgPrizes = [], cfgDays = {}, cfgDistributed = {}, cfgExceptions = new Set();
+let cfgUnscheduled = {}, cfgActiveChip = null, cfgMonth = '', cfgDayEditing = null, cfgDayInputs = {};
 
-let cfgEventId = null;
-let cfgPrizes = [];
-let cfgDays = {};
-let cfgDistributed = {};
-let cfgExceptions = new Set();
-let cfgUnscheduled = {};
-let cfgActiveChip = null;
-let cfgMonth = '';
-let cfgDayEditing = null;
-let cfgDayInputs = {}; // ep_id -> <input>
+// ── TIERS STATE ──
+let currentTiers = [], poolTierId = null, poolTierName = '';
 
 // ── UTILS ──
 function toast(msg) {
@@ -379,8 +634,10 @@ async function api(method, path, body) {
 function todayStr() { return new Date().toISOString().substring(0, 10); }
 function daysInMonth(ym) { const [y,m] = ym.split('-').map(Number); return new Date(y,m,0).getDate(); }
 function monthKeys(ym) { return Array.from({length:daysInMonth(ym)},(_,i)=>`${ym}-${String(i+1).padStart(2,'0')}`); }
+function fmtDate(d) { if(!d)return''; const [y,m,day]=d.split('-'); return `${day}/${m}/${y}`; }
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
 function switchLoginTab(tab, btn) {
   document.querySelectorAll('.login-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -396,6 +653,16 @@ function goPage(name, btn) {
   else if(name==='prizes') loadPrizes();
   else if(name==='events') loadEvents();
   else if(name==='distributions') loadDistributions();
+}
+function switchConfigTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cfg-tab-'+tab).classList.add('active');
+  if(tab==='ativacoes') loadActivations();
+  else if(tab==='faixas') loadTiers();
+  else if(tab==='metricas') loadMetrics();
+  else if(tab==='rodadas') loadRounds();
 }
 
 // ── AUTH ──
@@ -452,8 +719,10 @@ function renderTotems() {
   el.innerHTML=totems.map(t=>`<div class="card">
     <div class="card-title">${t.name}</div>
     <div class="card-meta">📍 ${t.location||'Sem localização'}</div>
-    <div class="access-badge" onclick="copyId('${t.access_id}')">
-      <span class="access-badge-label">ID</span>${t.access_id}<span style="font-size:10px;opacity:.5;">⎘</span>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;" onclick="navigator.clipboard.writeText('${t.access_id}').then(()=>toast('✓ ID copiado'))">
+      <span style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;">ID</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--accent);flex:1;">${t.access_id}</span>
+      <span style="font-size:10px;opacity:.4;">⎘</span>
     </div>
     <div class="card-actions">
       <button class="btn sm" onclick="editTotem(${t.id})">Editar</button>
@@ -461,7 +730,6 @@ function renderTotems() {
     </div>
   </div>`).join('');
 }
-function copyId(id){navigator.clipboard.writeText(id).then(()=>toast(`✓ ${id}`))}
 function openTotemModal(){editTotemId=null;document.getElementById('totem-modal-title').textContent='Novo Totem';document.getElementById('tm-name').value='';document.getElementById('tm-loc').value='';openModal('totem-modal');}
 function editTotem(id){const t=totems.find(x=>x.id===id);if(!t)return;editTotemId=id;document.getElementById('totem-modal-title').textContent='Editar Totem';document.getElementById('tm-name').value=t.name;document.getElementById('tm-loc').value=t.location||'';openModal('totem-modal');}
 async function saveTotem(){
@@ -485,15 +753,15 @@ function renderPrizes(){
       </div>
       ${p.description?`<div class="card-meta">${p.description}</div>`:''}
       <div style="display:flex;gap:8px;">
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;">Total</div><div style="font-size:18px;font-weight:700;">${p.stock}</div></div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;">Reservado</div><div style="font-size:18px;font-weight:700;color:var(--yellow);">${res}</div></div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;">Livre</div><div style="font-size:18px;font-weight:700;color:${disp>0?'var(--green)':'var(--danger)'};">${disp}</div></div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700;">Total</div><div style="font-size:18px;font-weight:800;">${p.stock}</div></div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700;">Reservado</div><div style="font-size:18px;font-weight:800;color:var(--yellow);">${res}</div></div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;flex:1;text-align:center;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700;">Livre</div><div style="font-size:18px;font-weight:800;color:${disp>0?'var(--green)':'var(--danger)'};">${disp}</div></div>
       </div>
       <div class="card-actions"><button class="btn sm" onclick="editPrize(${p.id})">Editar</button><button class="btn sm danger" onclick="deletePrize(${p.id})">Deletar</button></div>
     </div>`;}).join('');
 }
-function openPrizeModal(){editPrizeId=null;selectedColor=COLORS[0];renderColorPicker();['pr-name','pr-stock','pr-desc'].forEach(id=>document.getElementById(id).value='');document.getElementById('prize-modal-title').textContent='Novo Brinde';openModal('prize-modal');}
-function editPrize(id){const p=prizes.find(x=>x.id===id);if(!p)return;editPrizeId=id;selectedColor=p.color;renderColorPicker();document.getElementById('prize-modal-title').textContent='Editar Brinde';document.getElementById('pr-name').value=p.name;document.getElementById('pr-stock').value=p.stock;document.getElementById('pr-desc').value=p.description||'';openModal('prize-modal');}
+function openPrizeModal(){editPrizeId=null;selectedColor=COLORS[0];renderColorPicker();['pr-name','pr-stock','pr-desc'].forEach(id=>document.getElementById(id).value='');openModal('prize-modal');}
+function editPrize(id){const p=prizes.find(x=>x.id===id);if(!p)return;editPrizeId=id;selectedColor=p.color;renderColorPicker();document.getElementById('pr-name').value=p.name;document.getElementById('pr-stock').value=p.stock;document.getElementById('pr-desc').value=p.description||'';openModal('prize-modal');}
 async function savePrize(){
   const name=document.getElementById('pr-name').value.trim(), stock=parseInt(document.getElementById('pr-stock').value)||0, description=document.getElementById('pr-desc').value.trim();
   if(!name){toast('Nome obrigatório');return;}
@@ -512,7 +780,7 @@ function renderEvents(){
     const s=ev.date_start?.substring(0,10)||'', e=ev.date_end?.substring(0,10)||'';
     const isActive=today>=s&&today<=e&&ev.status==='ativo', isPast=today>e;
     const lbl=isActive?'Ativo agora':isPast?'Encerrado':'Em breve', cls=isActive?'green':isPast?'danger':'yellow';
-    const tl=(ev.totems||[]).map(t=>`<div class="totem-chip">📍 ${t.name} <span style="font-size:10px;font-family:monospace;">${t.access_id}</span></div>`).join('');
+    const tl=(ev.totems||[]).map(t=>`<div class="totem-chip">📍 ${t.name} <span style="font-size:10px;font-family:JetBrains Mono,monospace;">${t.access_id}</span></div>`).join('');
     return `<div class="event-card">
       <div class="event-header">
         <div>
@@ -526,7 +794,7 @@ function renderEvents(){
         </div>
       </div>
       <div class="event-body">
-        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Totens</div>
+        <div class="section-hd">Totens</div>
         <div class="event-totems">${tl||'<span style="font-size:12px;color:var(--text3);">Nenhum totem</span>'}</div>
       </div>
       <div class="event-footer">
@@ -536,16 +804,14 @@ function renderEvents(){
       </div>
     </div>`;}).join('');
 }
-function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
 function openEventModal(){
-  editEventId=null; document.getElementById('event-modal-title').textContent='Novo Evento';
+  editEventId=null;
   ['ev-name','ev-desc','ev-start','ev-end'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ev-totems-check').innerHTML=totems.map(t=>`<label style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" value="${t.id}" style="accent-color:var(--accent);"> ${t.name}</label>`).join('');
   openModal('event-modal');
 }
 function editEvent(id){
   const ev=events.find(x=>x.id===id); if(!ev)return; editEventId=id;
-  document.getElementById('event-modal-title').textContent='Editar Evento';
   document.getElementById('ev-name').value=ev.name; document.getElementById('ev-desc').value=ev.description||'';
   document.getElementById('ev-start').value=ev.date_start?.substring(0,10)||'';
   document.getElementById('ev-end').value=ev.date_end?.substring(0,10)||'';
@@ -576,40 +842,35 @@ async function saveEvent(){
 }
 async function deleteEvent(id){if(!confirm('Deletar?'))return;try{await api('DELETE',`/events/${id}`);toast('✓ Deletado');loadEvents();}catch(e){toast('Erro: '+e.message);}}
 
-// ══════════════════════════════════════════════
-// CONFIG MODAL
-// ══════════════════════════════════════════════
+// ── CONFIG MODAL ──
 async function openConfigModal(eventId) {
   cfgEventId=eventId; cfgPrizes=[]; cfgDays={}; cfgDistributed={}; cfgExceptions=new Set(); cfgUnscheduled={}; cfgActiveChip=null;
   const ev=events.find(x=>x.id===eventId);
-  document.getElementById('config-modal-title').textContent=`Distribuição: ${ev.name}`;
+  document.getElementById('config-modal-title').textContent=`⚙ ${ev.name}`;
   const now=new Date();
   cfgMonth=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   document.getElementById('config-month').value=cfgMonth;
+  // Reset tabs
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===0));
   try { cfgPrizes=await api('GET',`/events/${cfgEventId}/prizes`); if(cfgPrizes.length) cfgActiveChip=cfgPrizes[0].id; } catch(_) {}
   await loadCfgSchedule();
   populateCfgPrizeSelect(); renderCfgChips(); renderCfgStats(); renderCfgCal();
   openModal('config-modal');
 }
 
-// Carrega schedule do mês e popula cfgDays, cfgDistributed, cfgExceptions, cfgUnscheduled
 async function loadCfgSchedule() {
   try {
     const resp = await api('GET', `/events/${cfgEventId}/schedule?month=${cfgMonth}`);
-    // Servidor retorna { schedule: [...], unscheduled: {ep_id: qty} }
     const rows = resp.schedule || [];
     cfgUnscheduled = resp.unscheduled || {};
-
     cfgDays = {}; cfgDistributed = {}; cfgExceptions = new Set();
-
     for (const row of rows) {
       const day = row.day.substring(0, 10);
-      if (row.is_exception) {
-        cfgExceptions.add(day);
-      } else {
+      if (row.is_exception) { cfgExceptions.add(day); }
+      else {
         if (!cfgDays[day]) cfgDays[day] = {};
         if (!cfgDistributed[day]) cfgDistributed[day] = {};
-        // qty = o que foi planejado (salvo no banco), NÃO o saldo
         cfgDays[day][row.event_prize_id] = row.qty;
         cfgDistributed[day][row.event_prize_id] = row.distributed_on_day || 0;
       }
@@ -623,7 +884,6 @@ async function loadCfgCal() {
   renderCfgCal(); renderCfgChips(); renderCfgStats();
 }
 
-// Soma do que está planejado no calendário carregado para um ep_id
 function plannedInMonth(epId) {
   return Object.values(cfgDays).reduce((s, d) => s + (d[epId] || 0), 0);
 }
@@ -631,7 +891,6 @@ function plannedInMonth(epId) {
 function renderCfgStats() {
   const totalAlocado = cfgPrizes.reduce((s,c) => s+(c.allocated||0), 0);
   const totalPlanejado = cfgPrizes.reduce((s,c) => s+plannedInMonth(c.id), 0);
-  // sem dia = do servidor (global, correto)
   const totalSemDia = cfgPrizes.reduce((s,c) => s+(cfgUnscheduled[c.id]||0), 0);
   document.getElementById('config-stats').innerHTML=`
     <div class="stat-card"><div class="stat-label">Alocado no evento</div><div class="stat-val accent">${totalAlocado}</div></div>
@@ -669,7 +928,7 @@ function renderCfgChips() {
     return `<div class="prize-chip${cfgActiveChip===c.id?' active':''}" onclick="setCfgActiveChip(${c.id})">
       <div class="chip-dot" style="background:${c.color}"></div>
       ${c.prize_name}
-      <span style="font-size:10px;color:var(--text3);">${plan}/${c.allocated} planejado · ${sem} s/dia</span>
+      <span style="font-size:10px;color:var(--text3);">${plan}/${c.allocated} · ${sem} s/dia</span>
       <button class="chip-del" onclick="event.stopPropagation();removePrizeFromEvent(${c.id})">✕</button>
     </div>`;
   }).join('');
@@ -716,31 +975,21 @@ function renderCfgCal() {
   });
   const [y,m]=cfgMonth.split('-').map(Number);
   const firstDay=new Date(y,m-1,1).getDay(), dcount=daysInMonth(cfgMonth), tk=todayStr();
-  // máximo por brinde no mês (para escala das barras)
   const maxes = {};
   cfgPrizes.forEach(c => { maxes[c.id] = Math.max(1, ...monthKeys(cfgMonth).map(k => (cfgDays[k]||{})[c.id]||0)); });
-
   for(let i=0;i<firstDay;i++){const e=document.createElement('div');e.className='day-cell empty';cal.appendChild(e);}
-
   for(let d=1;d<=dcount;d++){
     const key=`${cfgMonth}-${String(d).padStart(2,'0')}`;
     const dayData=cfgDays[key]||{}, dayDist=cfgDistributed[key]||{};
     const isToday=key===tk, isPast=key<tk, isExc=cfgExceptions.has(key);
     const totalQty=cfgPrizes.reduce((s,c)=>s+(dayData[c.id]||0),0);
     const totalDist=cfgPrizes.reduce((s,c)=>s+(dayDist[c.id]||0),0);
-
     const cell=document.createElement('div');
     let cls='day-cell';
-    if(isToday) cls+=' today';
-    if(isPast) cls+=' past';
-    else if(isExc) cls+=' exception';
+    if(isToday) cls+=' today'; if(isPast) cls+=' past'; else if(isExc) cls+=' exception';
     cell.className=cls;
     if(!isPast) cell.onclick=()=>openDayModal(key);
-
-    const num=document.createElement('div');
-    num.className='day-num'+(isToday?' today-n':'');
-    num.textContent=d; cell.appendChild(num);
-
+    const num=document.createElement('div'); num.className='day-num'+(isToday?' today-n':''); num.textContent=d; cell.appendChild(num);
     if(!isPast && !isExc && cfgPrizes.length) {
       const bars=document.createElement('div'); bars.className='day-bars';
       cfgPrizes.forEach(c => {
@@ -778,20 +1027,15 @@ async function openDayModal(key) {
   const isEx=cfgExceptions.has(key);
   document.getElementById('exc-toggle').checked=isEx;
   document.getElementById('exc-row').classList.toggle('on',isEx);
-
-  // Mostra o modal com loading enquanto busca dados frescos
   const container=document.getElementById('day-steppers');
   container.innerHTML='<p style="font-size:13px;color:var(--text3);text-align:center;padding:12px 0;">Carregando...</p>';
   document.getElementById('day-modal').classList.add('open');
-
-  // Busca cfgPrizes e schedule frescos do servidor — garante distributed_total atualizado
   try {
     const [freshPrizes, freshSchedule] = await Promise.all([
       api('GET', `/events/${cfgEventId}/prizes`),
       api('GET', `/events/${cfgEventId}/schedule?month=${cfgMonth}`)
     ]);
     cfgPrizes = freshPrizes;
-    // Atualiza cfgUnscheduled e cfgDistributed com dados frescos
     cfgUnscheduled = freshSchedule.unscheduled || {};
     for (const row of (freshSchedule.schedule || [])) {
       const day = row.day.substring(0,10);
@@ -803,48 +1047,32 @@ async function openDayModal(key) {
       }
     }
   } catch(e) { container.innerHTML='<p style="font-size:13px;color:var(--danger);">Erro ao carregar dados.</p>'; return; }
-
   container.innerHTML='';
   if(!cfgPrizes.length){
     container.innerHTML='<p style="font-size:13px;color:var(--text3);">Nenhum brinde no evento.</p>';
   } else {
     cfgPrizes.forEach(c => {
-      // savedQty = total planejado para o dia (salvo no banco)
-      // dist      = já entregue hoje (imutável, piso do planejado)
-      // disponivel = o que ainda pode ser distribuído hoje = savedQty - dist
-      // O stepper exibe "disponível" e o usuário edita esse valor.
-      // Ao salvar, o banco recebe dist + valor_do_stepper (novo total planejado).
       const savedQty = (cfgDays[key]||{})[c.id] || 0;
       const dist = (cfgDistributed[key]||{})[c.id] || 0;
       const disponivel = Math.max(0, savedQty - dist);
-
-      // Máximo que pode ser adicionado como disponível neste dia =
-      // allocated - planejadoOutros - dist  (o dist já "ocupou" slot permanentemente)
-      const planejadoOutros = Object.entries(cfgDays)
-        .filter(([k]) => k !== key)
-        .reduce((s, [, dObj]) => s + (dObj[c.id] || 0), 0);
+      const planejadoOutros = Object.entries(cfgDays).filter(([k]) => k !== key).reduce((s, [, dObj]) => s + (dObj[c.id] || 0), 0);
       const maxDisponivel = Math.max(0, c.allocated - planejadoOutros - dist);
-
       const semDia = cfgUnscheduled[c.id] || 0;
-
       const row=document.createElement('div'); row.className='stepper-row'; if(isEx)row.style.opacity='.4';
       const dot=document.createElement('div'); dot.className='s-dot'; dot.style.background=c.color;
       const name=document.createElement('div'); name.className='s-name'; name.textContent=c.prize_name;
-
       let infoText, infoCls;
-      if(dist>0){ infoText=`${dist} entregue(s) hoje`; infoCls='s-info ok'; }
+      if(dist>0){ infoText=`${dist} entregue(s)`; infoCls='s-info ok'; }
       else if(semDia>0){ infoText=`${semDia} s/dia`; infoCls='s-info low'; }
       else { infoText='tudo planejado'; infoCls='s-info ok'; }
       const info=document.createElement('div'); info.className=infoCls; info.textContent=infoText;
-
       const stepper=document.createElement('div'); stepper.className='stepper';
       const btnM=document.createElement('button'); btnM.className='stp-btn'; btnM.textContent='−'; if(isEx)btnM.disabled=true;
       const inp=document.createElement('input'); inp.type='number'; inp.className='stp-inp';
-      // Stepper mostra disponivel (o que ainda pode sair hoje), não o total planejado
       inp.value=disponivel; inp.min=0; inp.max=maxDisponivel; if(isEx)inp.disabled=true;
       const btnP=document.createElement('button'); btnP.className='stp-btn'; btnP.textContent='+'; if(isEx)btnP.disabled=true;
       btnM.onclick=()=>{ inp.value=Math.max(0, (parseInt(inp.value)||0)-1); };
-      btnP.onclick=()=>{ const v=(parseInt(inp.value)||0)+1; if(v<=maxDisponivel)inp.value=v; else toast(`Máximo: ${maxDisponivel} disponível(is)`); };
+      btnP.onclick=()=>{ const v=(parseInt(inp.value)||0)+1; if(v<=maxDisponivel)inp.value=v; else toast(`Máximo: ${maxDisponivel}`); };
       stepper.appendChild(btnM); stepper.appendChild(inp); stepper.appendChild(btnP);
       row.appendChild(dot); row.appendChild(name); row.appendChild(info); row.appendChild(stepper);
       container.appendChild(row);
@@ -861,118 +1089,388 @@ function onExcToggle(){
     r.querySelectorAll('button,input').forEach(el=>el.disabled=isEx);
   });
 }
-
 async function salvarDia() {
   const key=cfgDayEditing, isEx=document.getElementById('exc-toggle').checked;
-
-  // Atualiza estado local imediatamente (UI responsiva)
-  if(isEx) {
-    cfgExceptions.add(key);
-    if(!cfgDays[key]) cfgDays[key]={};
-    cfgPrizes.forEach(c => { cfgDays[key][c.id]=0; });
-  } else {
-    cfgExceptions.delete(key);
-    if(!cfgDays[key]) cfgDays[key]={};
+  if(isEx) { cfgExceptions.add(key); if(!cfgDays[key]) cfgDays[key]={}; cfgPrizes.forEach(c => { cfgDays[key][c.id]=0; }); }
+  else {
+    cfgExceptions.delete(key); if(!cfgDays[key]) cfgDays[key]={};
     for(const [id,inp] of Object.entries(cfgDayInputs)) {
       const epId = parseInt(id);
       const distHoje = (cfgDistributed[key]||{})[epId] || 0;
-      // inp.value é o disponível desejado; banco armazena total = dist + disponível
       cfgDays[key][epId] = distHoje + (parseInt(inp.value)||0);
     }
   }
-
-  closeDayModal();
-  renderCfgCal(); renderCfgChips(); renderCfgStats();
-
-  // Salva no servidor — qty é sempre o total planejado (dist + disponível)
+  closeDayModal(); renderCfgCal(); renderCfgChips(); renderCfgStats();
   const items = cfgPrizes.map(c => ({ event_prize_id: c.id, qty: cfgDays[key][c.id]||0 }));
   try {
     await api('POST', `/events/${cfgEventId}/schedule/day`, { day: key, is_exception: isEx, items: isEx?[]:items });
     toast(isEx ? '🚫 Dia fechado!' : '✓ Salvo!');
-    // Recarrega unscheduled do servidor (pode ter mudado)
-    await loadCfgSchedule();
-    renderCfgChips(); renderCfgStats();
+    await loadCfgSchedule(); renderCfgChips(); renderCfgStats();
   } catch(e) { toast('Erro: '+e.message); }
 }
 
-// ── AUTO DISTRIBUIR ──
-// Usa 1 requisição bulk para todo o mês
 async function autoDistribuir() {
   if(!cfgActiveChip){toast('Selecione um brinde nos chips');return;}
   const prize=cfgPrizes.find(c=>c.id===cfgActiveChip); if(!prize)return;
   const tk=todayStr();
-  // Dias futuros do mês que não são exceção
   const keys=monthKeys(cfgMonth).filter(k=>k>=tk && !cfgExceptions.has(k));
   if(!keys.length){toast('Nenhum dia disponível');return;}
-
-  // Total disponível para distribuir =
-  // allocated - já distribuído (total global) - planejado em outros meses
-  // Como cfgDays só tem o mês atual, "outros meses" = scheduled_future que não está em cfgDays
-  // Usamos cfgUnscheduled + plannedInMonth como proxy correto:
-  // disponível para este mês = unscheduled + plannedInMonth (do mês, inclui passados)
-  // mas queremos só os dias futuros, então:
-  const pastPlanned = monthKeys(cfgMonth)
-    .filter(k => k < tk)
-    .reduce((s,k) => s+((cfgDays[k]||{})[cfgActiveChip]||0), 0);
-  // total disponível = unscheduled (servidor, global) + pastPlanned (dias passados deste mês que já foram planejados)
-  // Simplificado: allocated - distributed_total - scheduledFuture = cfgUnscheduled[id]
-  // Mas cfgUnscheduled já desconta o scheduled futuro, então:
-  const unschedGlobal = cfgUnscheduled[cfgActiveChip] || 0;
-  // planned já no mês futuro (dias >= tk, antes desta operação)
   const alreadyFuturePlanned = keys.reduce((s,k) => s+((cfgDays[k]||{})[cfgActiveChip]||0), 0);
-  // Total a distribuir nos dias futuros deste mês
+  const unschedGlobal = cfgUnscheduled[cfgActiveChip] || 0;
   const toDistribute = unschedGlobal + alreadyFuturePlanned;
-
   if(toDistribute<=0){toast('Sem unidades disponíveis para distribuir');return;}
-
   const perDay=Math.floor(toDistribute/keys.length), resto=toDistribute-perDay*keys.length;
-  // Aplica localmente
-  keys.forEach((k,i) => {
-    if(!cfgDays[k]) cfgDays[k]={};
-    cfgDays[k][cfgActiveChip] = perDay + (i<resto?1:0);
-  });
-
+  keys.forEach((k,i) => { if(!cfgDays[k]) cfgDays[k]={}; cfgDays[k][cfgActiveChip] = perDay + (i<resto?1:0); });
   renderCfgCal(); renderCfgChips(); renderCfgStats();
   toast(`${prize.prize_name}: ${perDay}${resto?'–'+(perDay+1):''}/dia em ${keys.length} dias — salvando...`);
-
-  // 1 requisição bulk para todo o mês
-  const days = keys.map(k => ({
-    day: k,
-    is_exception: false,
-    items: cfgPrizes.map(c => ({ event_prize_id: c.id, qty: (cfgDays[k]||{})[c.id]||0 }))
-  }));
+  const days = keys.map(k => ({ day: k, is_exception: false, items: cfgPrizes.map(c => ({ event_prize_id: c.id, qty: (cfgDays[k]||{})[c.id]||0 })) }));
   try {
     await api('POST', `/events/${cfgEventId}/schedule/bulk`, { days });
     toast(`✓ ${prize.prize_name}: ${keys.length} dias salvos!`);
-    // Recarrega para atualizar unscheduled
-    await loadCfgSchedule();
-    renderCfgChips(); renderCfgStats();
+    await loadCfgSchedule(); renderCfgChips(); renderCfgStats();
   } catch(e) { toast('Erro ao salvar: '+e.message); }
 }
 
-// ── LIMPAR MÊS ──
 async function limparMes() {
   if(!cfgActiveChip){toast('Selecione um brinde');return;}
   const prize=cfgPrizes.find(c=>c.id===cfgActiveChip);
   const tk=todayStr();
   const keys=monthKeys(cfgMonth).filter(k=>k>=tk);
-  // Aplica localmente
   keys.forEach(k => { if(!cfgDays[k]) cfgDays[k]={}; cfgDays[k][cfgActiveChip]=0; });
   renderCfgCal(); renderCfgChips(); renderCfgStats();
   toast(`${prize.prize_name}: limpando...`);
-  const days = keys.map(k => ({
-    day: k, is_exception: false,
-    items: cfgPrizes.map(c => ({ event_prize_id: c.id, qty: (cfgDays[k]||{})[c.id]||0 }))
-  }));
+  const days = keys.map(k => ({ day: k, is_exception: false, items: cfgPrizes.map(c => ({ event_prize_id: c.id, qty: (cfgDays[k]||{})[c.id]||0 })) }));
   try {
     await api('POST', `/events/${cfgEventId}/schedule/bulk`, { days });
     toast(`✓ ${prize.prize_name}: mês limpo!`);
-    await loadCfgSchedule();
-    renderCfgChips(); renderCfgStats();
+    await loadCfgSchedule(); renderCfgChips(); renderCfgStats();
   } catch(e) { toast('Erro: '+e.message); }
 }
 
-// ── DISTRIBUIÇÕES ──
+// ══════════════════════════════════════════════
+// ATIVAÇÕES
+// ══════════════════════════════════════════════
+async function loadActivations() {
+  try {
+    const list = await api('GET', `/events/${cfgEventId}/activations`);
+    const el = document.getElementById('activations-list');
+    if (!list.length) {
+      el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎮</div><div class="empty-state-title">Nenhuma ativação ainda</div><p style="font-size:12px;margin-top:4px;">Crie uma ativação para obter a Unity Key</p></div>`;
+      return;
+    }
+    const gtLabels = { SCORE_ENDLESS: 'Score Endless', JACKPOT_ROSACEA: 'Jackpot Rosácea', SCORE_TIMED: 'Score Timed', DISCRETE_SPIN: 'Discrete Spin' };
+    el.innerHTML = list.map(a => `
+      <div class="tier-card">
+        <div class="tier-header">
+          <span class="badge purple">🎮 ${gtLabels[a.game_type]||a.game_type}</span>
+          <div class="tier-name" style="margin-left:8px;">${a.name}</div>
+          ${a.location?`<span style="font-size:11px;color:var(--text3);">📍 ${a.location}</span>`:''}
+        </div>
+        <div style="padding:12px 16px;">
+          <div class="key-box">
+            <div class="key-text key-masked">${a.unity_key_masked}</div>
+            <button class="btn sm" onclick="showFullKey(${a.id},'${a.name.replace(/'/g,"\\'")}')">Ver Key</button>
+            <button class="btn sm danger" onclick="deleteActivation(${a.id})">✕</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) { toast('Erro ao carregar ativações'); }
+}
+
+function openActivationModal() {
+  document.getElementById('act-name').value='';
+  document.getElementById('act-loc').value='';
+  document.getElementById('act-gametype').value='SCORE_ENDLESS';
+  document.getElementById('act-key-result').style.display='none';
+  document.getElementById('act-save-btn').style.display='';
+  openModal('activation-modal');
+}
+
+function closeActivationModal() {
+  closeModal('activation-modal');
+  loadActivations();
+}
+
+async function saveActivation() {
+  const name=document.getElementById('act-name').value.trim();
+  const location=document.getElementById('act-loc').value.trim();
+  const game_type=document.getElementById('act-gametype').value;
+  if(!name){toast('Nome obrigatório');return;}
+  try {
+    const r = await api('POST', `/events/${cfgEventId}/activations`, { name, location, game_type });
+    document.getElementById('act-key-text').textContent = r.unity_key;
+    document.getElementById('act-key-result').style.display='block';
+    document.getElementById('act-save-btn').style.display='none';
+    toast('✓ Ativação criada!');
+  } catch(e) { toast('Erro: '+e.message); }
+}
+
+function copyKey() {
+  const key = document.getElementById('act-key-text').textContent;
+  navigator.clipboard.writeText(key).then(()=>toast('✓ Key copiada!'));
+}
+
+async function showFullKey(actId, actName) {
+  try {
+    const r = await api('GET', `/events/${cfgEventId}/activations/${actId}/key`);
+    document.getElementById('key-modal-actname').textContent = actName;
+    document.getElementById('key-modal-text').textContent = r.unity_key;
+    openModal('key-modal');
+  } catch(e) { toast('Erro ao buscar key'); }
+}
+
+function copyKeyModal() {
+  const key = document.getElementById('key-modal-text').textContent;
+  navigator.clipboard.writeText(key).then(()=>toast('✓ Key copiada!'));
+}
+
+async function deleteActivation(id) {
+  if(!confirm('Deletar esta ativação?'))return;
+  try {
+    await api('DELETE', `/events/${cfgEventId}/activations/${id}`);
+    toast('✓ Deletada'); loadActivations();
+  } catch(e) { toast('Erro: '+e.message); }
+}
+
+// ══════════════════════════════════════════════
+// FAIXAS DE PREMIAÇÃO
+// ══════════════════════════════════════════════
+async function loadTiers() {
+  try {
+    const gt = document.getElementById('tiers-gametype-filter').value;
+    const url = `/events/${cfgEventId}/tiers` + (gt ? `?game_type=${gt}` : '');
+    currentTiers = await api('GET', url);
+    renderTiers();
+  } catch(e) { toast('Erro ao carregar faixas'); }
+}
+
+function renderTiers() {
+  const gt = document.getElementById('tiers-gametype-filter')?.value || '';
+  const filtered = gt ? currentTiers.filter(t=>t.game_type===gt) : currentTiers;
+  const el = document.getElementById('tiers-list');
+
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏆</div><div class="empty-state-title">Nenhuma faixa configurada</div><p style="font-size:12px;margin-top:4px;">Crie faixas para definir as regras de pontuação</p></div>`;
+    return;
+  }
+
+  const gtLabels = { SCORE_ENDLESS:'Score Endless', JACKPOT_ROSACEA:'Jackpot Rosácea', SCORE_TIMED:'Score Timed', DISCRETE_SPIN:'Discrete Spin' };
+
+  // Agrupar por game_type
+  const byGT = {};
+  filtered.forEach(t => { if(!byGT[t.game_type]) byGT[t.game_type]=[]; byGT[t.game_type].push(t); });
+
+  el.innerHTML = Object.entries(byGT).map(([gt, tiers]) => `
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span class="badge purple">🎮 ${gtLabels[gt]||gt}</span>
+        <span style="font-size:11px;color:var(--text3);">${tiers.length} faixa(s)</span>
+      </div>
+      ${tiers.map(t => {
+        const bandStr = t.band_type==='interval'
+          ? `<span style="font-family:JetBrains Mono,monospace;font-size:11px;">${t.score_min} → ${t.score_max}</span>`
+          : `<span style="font-family:JetBrains Mono,monospace;font-size:11px;">= ${t.discrete_value}</span>`;
+        const isNoPrize = t.outcome_type === 'NO_PRIZE';
+        const gifts = t.gifts || [];
+        return `<div class="tier-card">
+          <div class="tier-header">
+            <div class="tier-order">${t.sort_order}</div>
+            <div class="tier-name">${t.name}</div>
+            <div class="tier-band">${bandStr}</div>
+            ${isNoPrize ? '<span class="badge" style="background:var(--bg4);color:var(--text3);">Participação</span>' : ''}
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              ${!isNoPrize?`<button class="btn xs primary" onclick="openPoolModal(${t.id},'${t.name.replace(/'/g,"\\'")}')">Pool (${gifts.length})</button>`:''}
+              <button class="btn xs danger" onclick="deleteTier(${t.id})">✕</button>
+            </div>
+          </div>
+          ${!isNoPrize && gifts.length ? `
+          <div class="tier-body">
+            <div class="tier-pool">
+              ${gifts.map(g => `
+                <div class="pool-item">
+                  <div style="width:10px;height:10px;border-radius:50%;background:${g.prize_color};flex-shrink:0;"></div>
+                  ${g.prize_name}
+                  <span class="pool-weight">peso ${g.configured_weight}</span>
+                </div>`).join('')}
+            </div>
+          </div>` : (!isNoPrize ? `<div class="tier-body"><div class="no-prize-tier">Nenhum brinde no pool ainda — clique em "Pool" para adicionar</div></div>` : '')}
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function onBandTypeChange() {
+  const bt = document.getElementById('tier-bandtype').value;
+  document.getElementById('tier-interval-fields').style.display = bt==='interval'?'grid':'none';
+  document.getElementById('tier-discrete-fields').style.display = bt==='discrete'?'block':'none';
+}
+
+function openTierModal() {
+  document.getElementById('tier-modal-title').textContent='Nova Faixa';
+  document.getElementById('tier-name').value='';
+  document.getElementById('tier-order').value='0';
+  document.getElementById('tier-outcome').value='PRIZE';
+  document.getElementById('tier-bandtype').value='interval';
+  document.getElementById('tier-scoremin').value='';
+  document.getElementById('tier-scoremax').value='';
+  document.getElementById('tier-discreteval').value='';
+  onBandTypeChange();
+  openModal('tier-modal');
+}
+
+async function saveTier() {
+  const name = document.getElementById('tier-name').value.trim();
+  const game_type = document.getElementById('tier-gametype').value;
+  const sort_order = parseInt(document.getElementById('tier-order').value)||0;
+  const outcome_type = document.getElementById('tier-outcome').value;
+  const band_type = document.getElementById('tier-bandtype').value;
+  const score_min = parseInt(document.getElementById('tier-scoremin').value);
+  const score_max = parseInt(document.getElementById('tier-scoremax').value);
+  const discrete_value = parseInt(document.getElementById('tier-discreteval').value);
+  if(!name){toast('Nome obrigatório');return;}
+  try {
+    await api('POST', `/events/${cfgEventId}/tiers`, { game_type, name, sort_order, outcome_type, band_type,
+      score_min: band_type==='interval'?score_min:null,
+      score_max: band_type==='interval'?score_max:null,
+      discrete_value: band_type==='discrete'?discrete_value:null });
+    toast('✓ Faixa criada!');
+    closeModal('tier-modal');
+    loadTiers();
+  } catch(e) { toast('Erro: '+e.message); }
+}
+
+async function deleteTier(id) {
+  if(!confirm('Deletar faixa?'))return;
+  try { await api('DELETE',`/events/${cfgEventId}/tiers/${id}`); toast('✓ Deletado'); loadTiers(); }
+  catch(e) { toast('Erro: '+e.message); }
+}
+
+// ── POOL MODAL ──
+async function openPoolModal(tierId, tierName) {
+  poolTierId = tierId; poolTierName = tierName;
+  document.getElementById('pool-modal-title').textContent = `Pool — ${tierName}`;
+  await refreshPoolModal();
+  openModal('pool-modal');
+}
+
+async function refreshPoolModal() {
+  // Brindes já no pool (vem do tier com gifts)
+  const tier = currentTiers.find(t=>t.id===poolTierId);
+  const gifts = tier?.gifts || [];
+
+  const currentEl = document.getElementById('pool-current-gifts');
+  if(!gifts.length) {
+    currentEl.innerHTML = '<span style="font-size:12px;color:var(--text3);">Nenhum brinde no pool ainda.</span>';
+  } else {
+    // Calcular probabilidades estimadas
+    const totalPeso = gifts.reduce((s,g) => s + (parseFloat(g.configured_weight)||1), 0);
+    currentEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:6px;">
+      ${gifts.map(g => {
+        const pct = totalPeso>0 ? ((parseFloat(g.configured_weight)||1)/totalPeso*100).toFixed(1) : '0';
+        return `<div style="display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:${g.prize_color};flex-shrink:0;"></div>
+          <div style="flex:1;font-size:13px;font-weight:600;">${g.prize_name}</div>
+          <div style="width:80px;">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px;">peso: ${g.configured_weight}</div>
+            <div style="height:4px;background:var(--bg4);border-radius:2px;"><div style="height:100%;width:${pct}%;background:var(--accent);border-radius:2px;"></div></div>
+          </div>
+          <span style="font-family:JetBrains Mono,monospace;font-size:12px;color:var(--accent);font-weight:600;width:40px;text-align:right;">${pct}%</span>
+          <button class="btn xs danger" onclick="removeFromPool(${g.id})">✕</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Popula select de brindes disponíveis
+  const usedIds = gifts.map(g=>g.event_prize_id);
+  const available = cfgPrizes.filter(p=>!usedIds.includes(p.id));
+  const sel = document.getElementById('pool-prize-sel');
+  sel.innerHTML = available.length
+    ? '<option value="">Selecione...</option>' + available.map(p=>`<option value="${p.id}">${p.prize_name} (${p.allocated} alocados)</option>`).join('')
+    : '<option value="">Todos os brindes já estão no pool</option>';
+}
+
+async function addGiftToPool() {
+  const epId = parseInt(document.getElementById('pool-prize-sel').value);
+  const weight = parseFloat(document.getElementById('pool-weight').value)||1;
+  if(!epId){toast('Selecione um brinde');return;}
+  try {
+    await api('POST', `/events/${cfgEventId}/tiers/${poolTierId}/gifts`, { event_prize_id: epId, configured_weight: weight });
+    toast('✓ Adicionado ao pool!');
+    // Recarrega tiers e atualiza modal
+    currentTiers = await api('GET', `/events/${cfgEventId}/tiers`);
+    await refreshPoolModal();
+    renderTiers();
+  } catch(e) { toast('Erro: '+e.message); }
+}
+
+async function removeFromPool(tgId) {
+  try {
+    await api('DELETE', `/events/${cfgEventId}/tiers/${poolTierId}/gifts/${tgId}`);
+    toast('✓ Removido');
+    currentTiers = await api('GET', `/events/${cfgEventId}/tiers`);
+    await refreshPoolModal();
+    renderTiers();
+  } catch(e) { toast('Erro: '+e.message); }
+}
+
+// ══════════════════════════════════════════════
+// MÉTRICAS
+// ══════════════════════════════════════════════
+async function loadMetrics() {
+  try {
+    const data = await api('GET', `/events/${cfgEventId}/metrics`);
+
+    // Hoje
+    const todayEl = document.getElementById('metrics-today');
+    if(!data.today.length) {
+      todayEl.innerHTML='<div style="font-size:12px;color:var(--text3);">Nenhuma distribuição hoje.</div>';
+    } else {
+      todayEl.innerHTML = data.today.map(t=>`
+        <div class="metric-card">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:${t.color};flex-shrink:0;"></div>
+            <div class="metric-label" style="margin-bottom:0;">${t.prize_name}</div>
+          </div>
+          <div class="metric-val" style="color:var(--accent);">${t.distributed_today}</div>
+          <div class="metric-sub">distribuídos hoje</div>
+        </div>`).join('');
+    }
+
+    // Estoque
+    const stockEl = document.getElementById('metrics-stock');
+    stockEl.innerHTML = `<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;">
+      <table class="dist-table" style="margin:0;">
+        <thead><tr><th>Brinde</th><th>Alocado</th><th>Distribuído</th><th>Restante</th><th>Progresso</th></tr></thead>
+        <tbody>${data.stock.map(s=>{
+          const restante = s.allocated - s.distributed_total;
+          const pct = s.allocated>0 ? (s.distributed_total/s.allocated*100) : 0;
+          return `<tr>
+            <td><div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:${s.color};"></div>${s.prize_name}</div></td>
+            <td style="font-family:JetBrains Mono,monospace;">${s.allocated}</td>
+            <td style="font-family:JetBrains Mono,monospace;color:var(--accent);">${s.distributed_total}</td>
+            <td style="font-family:JetBrains Mono,monospace;color:${restante>0?'var(--green)':'var(--danger)'};">${restante}</td>
+            <td style="min-width:100px;"><div class="progress-bar"><div class="progress-fill" style="width:${pct.toFixed(1)}%;background:${pct>80?'var(--danger)':pct>50?'var(--yellow)':'var(--green)'};"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px;">${pct.toFixed(0)}%</div></td>
+          </tr>`;}).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+    // Histórico
+    const tbody = document.getElementById('metrics-history-tbody');
+    if(!data.history.length) {
+      tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--text3);">Nenhum registro ainda.</td></tr>';
+    } else {
+      tbody.innerHTML = data.history.map(h=>`<tr>
+        <td style="font-size:12px;">${fmtDate(h.day)}</td>
+        <td><div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:${h.color};"></div>${h.prize_name}</div></td>
+        <td style="font-family:JetBrains Mono,monospace;font-weight:700;color:var(--accent);">${h.qty}</td>
+      </tr>`).join('');
+    }
+  } catch(e) { toast('Erro ao carregar métricas'); }
+}
+
+// ── DISTRIBUTIONS ──
 async function loadDistributions() {
   try{
     const data=await api('GET','/distributions');
@@ -980,6 +1478,49 @@ async function loadDistributions() {
     if(!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text3);">Sem distribuições</td></tr>';return;}
     tbody.innerHTML=data.map(d=>`<tr><td>${d.event_name||'—'}</td><td>${d.totem_name}</td><td>${d.prize_name}</td><td>${d.user_phone||'—'}</td><td style="color:var(--text2);font-size:12px;">${new Date(d.distributed_at).toLocaleString('pt-BR')}</td></tr>`).join('');
   }catch(e){toast('Erro');}
+}
+
+// ══════════════════════════════════════════════
+// RODADAS UNITY
+// ══════════════════════════════════════════════
+async function loadRounds() {
+  try {
+    const rounds = await api('GET', `/events/${cfgEventId}/rounds`);
+    const gtLabels = { SCORE_ENDLESS:'Score Endless', JACKPOT_ROSACEA:'Jackpot Rosácea', SCORE_TIMED:'Score Timed', DISCRETE_SPIN:'Discrete Spin' };
+
+    // Stats
+    const total = rounds.length;
+    const withPrize = rounds.filter(r => r.had_prize).length;
+    const noPrize = total - withPrize;
+    document.getElementById('rounds-stats').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total rodadas</div><div class="stat-val accent">${total}</div></div>
+      <div class="stat-card"><div class="stat-label">Com prêmio</div><div class="stat-val green">${withPrize}</div></div>
+      <div class="stat-card"><div class="stat-label">Sem prêmio</div><div class="stat-val yellow">${noPrize}</div></div>
+      <div class="stat-card"><div class="stat-label">Taxa de prêmio</div><div class="stat-val" style="color:var(--purple);">${total>0?(withPrize/total*100).toFixed(1):0}%</div></div>`;
+
+    const tbody = document.getElementById('rounds-tbody');
+    if (!rounds.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3);">Nenhuma rodada registrada ainda.<br><span style="font-size:11px;">As rodadas aparecem aqui quando a Unity chama POST /api/v2/unity/round/complete</span></td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = rounds.map(r => {
+      const dt = new Date(r.created_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      const scoreStr = r.score != null ? r.score : (r.discrete_outcome != null ? `${r.discrete_outcome} 🌹` : '—');
+      const resultBadge = r.had_prize
+        ? `<span class="badge green"><span class="badge-dot"></span>Premiado</span>`
+        : `<span class="badge yellow"><span class="badge-dot"></span>Sem prêmio</span>`;
+      return `<tr>
+        <td style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;">${dt}</td>
+        <td style="font-size:12px;">${r.activation_name||'—'}</td>
+        <td><span class="badge purple">${gtLabels[r.game_type]||r.game_type}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace;font-weight:700;">${scoreStr}</td>
+        <td style="font-size:12px;">${r.tier_label||'<span style="color:var(--text3);">—</span>'}</td>
+        <td style="font-size:12px;font-weight:600;">${r.gift_name||'<span style="color:var(--text3);">—</span>'}</td>
+        <td>${resultBadge}</td>
+      </tr>`;
+    }).join('');
+  } catch(e) { toast('Erro ao carregar rodadas'); }
 }
 </script>
 </body>

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Dilis — Totem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent:#1a56db; --accent-bg:#eff6ff;
+      --green:#059669; --green-bg:#ecfdf5;
+      --danger:#dc2626; --danger-bg:#fef2f2;
+      --yellow:#b45309; --yellow-bg:#fffbeb;
+      --text:#111827; --text2:#6b7280; --text3:#9ca3af;
+      --border:#e5e7eb; --bg:#f3f4f6; --card:#ffffff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+    .header{background:#fff;border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:10px;}
+    .header-logo{width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;}
+    .header-title{font-size:17px;font-weight:700;color:var(--accent);}
+    .header-sub{font-size:11px;color:var(--text3);}
+
+    .nav{background:#fff;border-bottom:1px solid var(--border);display:none;overflow-x:auto;scrollbar-width:none;}
+    .nav::-webkit-scrollbar{display:none;}
+    .nav-inner{display:flex;padding:0 12px;gap:2px;}
+    .nav-btn{flex-shrink:0;padding:12px 14px;background:none;border:none;color:var(--text2);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+    .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+    .wrap{max-width:480px;margin:0 auto;padding:24px 16px;}
+    .screen{display:none;flex-direction:column;gap:14px;}
+    .screen.active{display:flex;}
+
+    /* LOGIN */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;}
+    .card h2{font-size:17px;font-weight:700;margin-bottom:6px;}
+    .card p{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.5;}
+    .label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;display:block;}
+    .input-mono{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:9px;font-family:'DM Mono',monospace;font-size:18px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--text);outline:none;transition:border-color .2s;}
+    .input-mono:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,86,219,.1);}
+    .input-key{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:9px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+    .input-key:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,86,219,.1);}
+    .btn-main{width:100%;padding:13px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:12px;transition:all .2s;}
+    .btn-main:hover{background:#1648c0;}
+    .btn-main:disabled{opacity:.5;cursor:not-allowed;}
+    .err{font-size:13px;color:var(--danger);text-align:center;margin-top:6px;min-height:18px;}
+
+    /* EVENT BANNER */
+    .event-banner{background:var(--accent);color:#fff;border-radius:12px;padding:16px 18px;}
+    .event-banner-name{font-size:16px;font-weight:700;margin-bottom:2px;}
+    .event-banner-date{font-size:12px;opacity:.8;}
+    .event-banner-mode{font-size:11px;opacity:.7;margin-top:4px;font-family:'DM Mono',monospace;}
+
+    .section-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+    .btn-sm{padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;}
+    .btn-sm:hover{background:var(--bg);}
+
+    /* MODO MANUAL (distribuir) */
+    .prize-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+    .prize-card.esgotado{opacity:.5;}
+    .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+    .prize-info{flex:1;}
+    .prize-name{font-size:14px;font-weight:600;}
+    .prize-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;}
+    .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+    .pill.green{background:var(--green-bg);color:var(--green);}
+    .pill.danger{background:var(--danger-bg);color:var(--danger);}
+    .pill.yellow{background:var(--yellow-bg);color:var(--yellow);}
+    .pill.blue{background:var(--accent-bg);color:var(--accent);}
+    .btn-dist{padding:9px 14px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;}
+    .btn-dist:disabled{opacity:.4;cursor:not-allowed;}
+
+    /* JOGO GENÉRICO */
+    .game-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 18px;display:flex;flex-direction:column;gap:14px;}
+    .game-title{font-size:16px;font-weight:700;}
+    .game-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+    .result-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 16px;text-align:center;}
+    .result-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+    .result-value{font-size:15px;font-weight:700;color:var(--accent);min-height:24px;}
+    .btn-jogo{width:100%;padding:13px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;}
+    .btn-jogo:disabled{opacity:.5;cursor:not-allowed;}
+    .no-prizes-warn{background:var(--yellow-bg);border:1px solid rgba(180,83,9,.2);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--yellow);font-weight:600;}
+
+    /* ROLETA */
+    .roulette-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+    .roulette-outer{position:relative;width:260px;height:260px;}
+    .roulette-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:22px solid var(--accent);z-index:10;}
+    #roulette-canvas{border-radius:50%;border:3px solid var(--border);display:block;}
+    .roulette-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;background:#fff;border:3px solid var(--border);border-radius:50%;}
+
+    /* JACKPOT */
+    .reels-row{display:flex;gap:6px;align-items:center;justify-content:center;}
+    .reel-vp{width:76px;height:92px;overflow:hidden;border:1px solid var(--border);border-radius:10px;background:#fff;position:relative;}
+    .reel-vp::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(243,244,246,.9) 0%,transparent 28%,transparent 72%,rgba(243,244,246,.9) 100%);pointer-events:none;z-index:2;}
+    .reel-line{position:absolute;top:calc(50% - 1px);left:0;right:0;height:2px;background:rgba(26,86,219,.12);z-index:3;}
+    .reel-track{display:flex;flex-direction:column;will-change:transform;}
+    .reel-sym{width:76px;height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+    .reel-sym small{font-size:9px;color:var(--text3);margin-top:2px;font-weight:600;}
+    .reel-sep{width:1px;height:70px;background:var(--border);}
+
+    /* ROSAS */
+    .hud-row{display:flex;gap:8px;}
+    .hud-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;flex:1;text-align:center;}
+    .hud-val{font-size:22px;font-weight:700;color:var(--accent);}
+    .hud-val.g{color:var(--green);}.hud-val.r{color:var(--danger);}
+    .hud-lbl{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+    .bar-wrap{background:var(--border);border-radius:6px;height:6px;overflow:hidden;}
+    .bar{height:100%;background:var(--accent);border-radius:6px;transition:width .2s;}
+    .bar.danger{background:var(--danger);}
+    .arena{position:relative;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;height:260px;touch-action:none;-webkit-tap-highlight-color:transparent;}
+    .arena-idle{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;}
+    .fall{position:absolute;font-size:26px;cursor:pointer;user-select:none;top:-36px;will-change:top;}
+    .burst{position:absolute;pointer-events:none;font-size:13px;font-weight:700;animation:bup .6s ease-out forwards;}
+    @keyframes bup{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-36px);}}
+    .arena-overlay{position:absolute;inset:0;background:rgba(255,255,255,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:20;border-radius:12px;}
+    .btn-jogo.green{background:var(--green);}
+    .btn-jogo.red{background:var(--danger);}
+
+    /* FEEDBACK */
+    .feedback{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;}
+    .feedback.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .feedback.success{background:var(--green);}
+    .feedback.error{background:var(--danger);}
+
+    /* MODO badge */
+    .mode-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-bg);border:1px solid rgba(26,86,219,.2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--accent);}
+    .mode-badge.manual{background:#f0fdf4;border-color:rgba(5,150,105,.2);color:var(--green);}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">🎪</div>
+  <div>
+    <div class="header-title">dilis</div>
+    <div class="header-sub">Totem de Distribuição</div>
+  </div>
+</div>
+
+<div class="nav" id="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" id="tab-dist"    onclick="goTab('dist')">🎁 Manual</button>
+    <button class="nav-btn"        id="tab-roleta"  onclick="goTab('roleta')">🎡 Roleta</button>
+    <button class="nav-btn"        id="tab-jackpot" onclick="goTab('jackpot')">🎰 Jackpot</button>
+    <button class="nav-btn"        id="tab-rosas"   onclick="goTab('rosas')">🌹 Rosas</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div id="screen-login" style="display:flex;flex-direction:column;gap:16px;">
+    <div class="card">
+      <h2>Identificar Totem</h2>
+      <p>Digite o ID do totem para distribuição manual, ou a Unity Key para usar os jogos com faixas de premiação.</p>
+
+      <label class="label">ID do Totem <span style="color:var(--text3);font-weight:400;text-transform:none;">(modo manual)</span></label>
+      <input type="text" id="access-id-input" class="input-mono" placeholder="TM-XXXXXX" maxlength="9"
+        oninput="this.value=this.value.toUpperCase()"
+        onkeydown="if(event.key==='Enter')conectar()">
+
+      <div style="margin-top:14px;">
+        <label class="label">Unity Key <span style="color:var(--text3);font-weight:400;text-transform:none;">(modo jogos com faixas)</span></label>
+        <input type="text" id="unity-key-input" class="input-key" placeholder="cole aqui a unity key da ativação">
+      </div>
+
+      <div class="err" id="login-err"></div>
+      <button class="btn-main" id="btn-conectar" onclick="conectar()">Conectar</button>
+    </div>
+    <div style="font-size:12px;color:var(--text3);text-align:center;" id="data-hoje-label"></div>
+  </div>
+
+  <!-- DISTRIBUIR (manual) -->
+  <div id="screen-dist" class="screen">
+    <div id="ev-banner-wrap"></div>
+    <div id="prizes-wrap"></div>
+    <div style="text-align:center;margin-top:4px;">
+      <button class="btn-sm" onclick="voltarLogin()">Trocar totem</button>
+    </div>
+  </div>
+
+  <!-- ROLETA -->
+  <div id="screen-roleta" class="screen">
+    <div class="game-card">
+      <div>
+        <div class="game-title">🎡 Roleta</div>
+        <div class="game-sub" id="roleta-mode-label"></div>
+      </div>
+      <div id="roleta-no-prizes" class="no-prizes-warn" style="display:none;">Nenhum brinde disponível para sorteio.</div>
+      <div id="roleta-body">
+        <div class="roulette-wrap">
+          <div class="roulette-outer">
+            <div class="roulette-pointer"></div>
+            <canvas id="roulette-canvas" width="260" height="260"></canvas>
+            <div class="roulette-center"></div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">Resultado</div>
+            <div class="result-value" id="roleta-result">Aguardando giro...</div>
+          </div>
+          <button class="btn-jogo" id="btn-spin" onclick="spinRoleta()">Girar Roleta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JACKPOT -->
+  <div id="screen-jackpot" class="screen">
+    <div class="game-card">
+      <div>
+        <div class="game-title">🎰 Jackpot</div>
+        <div class="game-sub" id="jackpot-mode-label"></div>
+      </div>
+      <div id="jackpot-no-prizes" class="no-prizes-warn" style="display:none;">Nenhum brinde disponível.</div>
+      <div id="jackpot-body">
+        <div class="reels-row">
+          <div class="reel-vp"><div class="reel-line"></div><div class="reel-track" id="reel-0"></div></div>
+          <div class="reel-sep"></div>
+          <div class="reel-vp"><div class="reel-line"></div><div class="reel-track" id="reel-1"></div></div>
+          <div class="reel-sep"></div>
+          <div class="reel-vp"><div class="reel-line"></div><div class="reel-track" id="reel-2"></div></div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Resultado</div>
+          <div class="result-value" id="jackpot-result">Puxe a alavanca!</div>
+        </div>
+        <button class="btn-jogo red" id="btn-pull" onclick="pullJackpot()">🎰 Puxar Alavanca</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROSAS -->
+  <div id="screen-rosas" class="screen">
+    <div class="game-card">
+      <div>
+        <div class="game-title">🌹 Chuva de Rosas</div>
+        <div class="game-sub" id="rosas-mode-label"></div>
+      </div>
+      <div id="rosas-no-prizes" class="no-prizes-warn" style="display:none;">Nenhum brinde disponível.</div>
+      <div id="rosas-body">
+        <div class="hud-row">
+          <div class="hud-box"><div class="hud-val g" id="r-score">0</div><div class="hud-lbl">Rosas</div></div>
+          <div class="hud-box"><div class="hud-val" id="r-target">15</div><div class="hud-lbl">Meta</div></div>
+          <div class="hud-box"><div class="hud-val r" id="r-timer">30</div><div class="hud-lbl">Tempo</div></div>
+        </div>
+        <div class="bar-wrap"><div class="bar" id="r-bar" style="width:100%"></div></div>
+        <div class="arena arena-idle" id="roses-arena">
+          <div style="font-size:14px;font-weight:600;color:var(--text2);">🌹 Pronta para jogar?</div>
+          <div style="font-size:12px;color:var(--text3);">Clique em Iniciar</div>
+        </div>
+        <button class="btn-jogo green" id="btn-rosas" onclick="startRosas()">🌹 Iniciar Jogo</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="feedback" id="feedback"></div>
+
+<script>
+const BASE = window.location.origin;
+
+// Estado global
+let accessId    = '';   // ID do totem (modo manual)
+let unityKey    = '';   // Unity Key (modo jogos)
+let modoUnity   = false; // true = usa faixas via /v2/unity/round/complete
+let eventData   = null;  // dados do /totem/:id/today (modo manual)
+
+// ── HELPERS ──
+function toast(msg, type='') {
+  const el = document.getElementById('feedback');
+  el.textContent = msg;
+  el.className = 'feedback show' + (type ? ' '+type : '');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+// Brindes disponíveis hoje (modo manual)
+function prizesDisponiveis() {
+  return (eventData?.prizes || []).filter(p =>
+    p.remaining_total > 0 && !(p.planned_today > 0 && p.remaining_today <= 0)
+  );
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  document.getElementById('data-hoje-label').textContent =
+    'Hoje: ' + new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+  const savedId  = localStorage.getItem('totem_access_id');
+  const savedKey = localStorage.getItem('totem_unity_key');
+  if (savedId)  document.getElementById('access-id-input').value = savedId;
+  if (savedKey) document.getElementById('unity-key-input').value = savedKey;
+  if (savedId || savedKey) conectar();
+});
+
+// ── CONECTAR ──
+async function conectar() {
+  const id  = document.getElementById('access-id-input').value.trim().toUpperCase();
+  const key = document.getElementById('unity-key-input').value.trim();
+  const errEl = document.getElementById('login-err');
+  const btn   = document.getElementById('btn-conectar');
+  if (!id && !key) { errEl.textContent = 'Digite o ID do totem ou a Unity Key'; return; }
+  errEl.textContent = '';
+  btn.disabled = true; btn.textContent = 'Conectando...';
+
+  try {
+    // Prioridade: unity key (modo jogos com faixas)
+    if (key) {
+      const r = await fetch(`${BASE}/api/v2/unity/health`, {
+        headers: { 'Authorization': 'Bearer ' + key }
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.message || 'Unity Key inválida');
+      unityKey  = key;
+      modoUnity = true;
+      localStorage.setItem('totem_unity_key', key);
+      entrarModoUnity(d.data);
+      return;
+    }
+
+    // Modo manual (ID do totem)
+    if (id) {
+      let data;
+      try {
+        const r = await fetch(`${BASE}/api/totem/${id}/today`);
+        data = await r.json();
+        if (!r.ok) throw new Error(data.error || 'Totem não encontrado');
+      } catch(e) {
+        // fallback demo se ID começa com TM-
+        if (/^TM-/i.test(id)) {
+          data = demoDados();
+        } else throw e;
+      }
+      accessId  = id;
+      modoUnity = false;
+      localStorage.setItem('totem_access_id', id);
+      eventData = data;
+      entrarModoManual(data);
+    }
+  } catch(e) {
+    errEl.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Conectar';
+  }
+}
+
+function demoDados() {
+  return {
+    totem: { name: 'Totem Demo', location: 'Praça Central' },
+    event: { name: 'Evento Demo', date_start: '2025-01-01', date_end: '2025-12-31' },
+    prizes: [
+      { prize_id:1, prize_name:'Batom Rosa',   color:'#e879f9', remaining_today:8,  planned_today:10, distributed_today:2, remaining_total:45 },
+      { prize_id:2, prize_name:'Perfume Gold', color:'#f59e0b', remaining_today:4,  planned_today:5,  distributed_today:1, remaining_total:20 },
+      { prize_id:3, prize_name:'Kit Maquiagem',color:'#ef4444', remaining_today:2,  planned_today:3,  distributed_today:1, remaining_total:10 },
+    ]
+  };
+}
+
+function entrarModoManual(data) {
+  document.getElementById('screen-login').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'block';
+  renderDistribuir();
+  // Nos jogos em modo manual, usamos sorteio local + distribui manual
+  initRoleta(); initJackpot(); resetRosas();
+  goTab('dist');
+}
+
+function entrarModoUnity(info) {
+  document.getElementById('screen-login').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'block';
+  // Banner de evento a partir do health
+  document.getElementById('ev-banner-wrap').innerHTML = `
+    <div class="event-banner">
+      <div class="event-banner-name">${info.eventName}</div>
+      <div class="event-banner-mode">🎮 ${info.gameType} · ${info.activationName}</div>
+      <div class="event-banner-date">Rodadas hoje: ${info.todayRounds} · Prêmios: ${info.todayPrizes}</div>
+    </div>`;
+  document.getElementById('prizes-wrap').innerHTML = `
+    <div style="background:var(--accent-bg);border:1px solid rgba(26,86,219,.2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--accent);">
+      ✅ Modo Unity ativo. Use as abas de jogos — o servidor resolve faixas e prêmios automaticamente.
+    </div>`;
+  initRoleta(); initJackpot(); resetRosas();
+  goTab('dist');
+  atualizarModeLabelJogos(info.gameType);
+}
+
+function atualizarModeLabelJogos(gameType) {
+  const txt = `Modo Unity — ${gameType} · o servidor decide o brinde`;
+  ['roleta','jackpot','rosas'].forEach(j => {
+    const el = document.getElementById(j+'-mode-label');
+    if (el) el.textContent = txt;
+  });
+}
+
+function voltarLogin() {
+  localStorage.removeItem('totem_access_id');
+  localStorage.removeItem('totem_unity_key');
+  accessId = ''; unityKey = ''; modoUnity = false; eventData = null;
+  document.getElementById('main-nav').style.display = 'none';
+  ['dist','roleta','jackpot','rosas'].forEach(t =>
+    document.getElementById('screen-'+t).classList.remove('active'));
+  document.getElementById('screen-login').style.display = 'flex';
+  document.getElementById('access-id-input').value = '';
+  document.getElementById('unity-key-input').value = '';
+  document.getElementById('login-err').textContent = '';
+}
+
+function goTab(tab) {
+  ['dist','roleta','jackpot','rosas'].forEach(t => {
+    document.getElementById('screen-'+t).classList.remove('active');
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.getElementById('screen-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if (tab === 'roleta')  initRoleta();
+  if (tab === 'jackpot') initJackpot();
+  if (tab === 'rosas')   checkRosasBrindes();
+}
+
+// ══════════════════════════════════════════
+// CHAMADA UNITY — coração do novo sistema
+// ══════════════════════════════════════════
+// score ou discreteOutcome dependendo do gameType
+async function chamarRoundComplete(score, discreteOutcome) {
+  const gameType = 'SCORE_ENDLESS'; // pode ser sobrescrito conforme o jogo
+  const body = { gameType };
+  if (score != null)           body.score = score;
+  if (discreteOutcome != null) body.discreteOutcome = discreteOutcome;
+
+  const r = await fetch(`${BASE}/api/v2/unity/round/complete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + unityKey
+    },
+    body: JSON.stringify(body)
+  });
+  return await r.json();
+}
+
+// Mesma chamada mas aceitando gameType explícito
+async function roundComplete(gameType, score, discreteOutcome, clientRoundId) {
+  const body = { gameType };
+  if (score != null)           body.score = score;
+  if (discreteOutcome != null) body.discreteOutcome = discreteOutcome;
+  if (clientRoundId)           body.clientRoundId = clientRoundId;
+
+  const r = await fetch(`${BASE}/api/v2/unity/round/complete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + unityKey
+    },
+    body: JSON.stringify(body)
+  });
+  return await r.json();
+}
+
+// Exibe o resultado da rodada na tela
+function exibirResultadoRodada(resp, elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  if (!resp.success) {
+    el.textContent = '⚠️ ' + (resp.message || 'Erro');
+    toast('Erro: ' + resp.message, 'error');
+    return;
+  }
+  const { gift, tierLabel, code } = resp.data || resp;
+  if (gift) {
+    el.textContent = `🎉 ${gift.name}`;
+    toast(`🎁 Prêmio: ${gift.name}! (${tierLabel})`, 'success');
+  } else {
+    el.textContent = `😊 ${tierLabel || 'Sem prêmio desta vez'}`;
+    toast('Sem prêmio nesta rodada.', '');
+  }
+}
+
+// ══════════════════════════════════════════
+// MODO MANUAL — distribuir
+// ══════════════════════════════════════════
+function renderDistribuir() {
+  if (modoUnity) return; // banner já foi renderizado
+  const data = eventData;
+  const bannerWrap = document.getElementById('ev-banner-wrap');
+  const prizesWrap = document.getElementById('prizes-wrap');
+  if (!data?.event) {
+    bannerWrap.innerHTML = `<div class="card" style="text-align:center;"><div style="font-size:32px;margin-bottom:8px;">📅</div><strong>Nenhum evento ativo hoje</strong></div>`;
+    prizesWrap.innerHTML = ''; return;
+  }
+  bannerWrap.innerHTML = `
+    <div class="event-banner">
+      <div class="event-banner-name">${data.event.name}</div>
+      <div class="event-banner-date">${fmtDate(data.event.date_start)} — ${fmtDate(data.event.date_end)}</div>
+      <div class="event-banner-mode">📍 ${data.totem.name}${data.totem.location?' · '+data.totem.location:''}</div>
+    </div>`;
+
+  if (!data.prizes.length) {
+    prizesWrap.innerHTML = `<div class="card" style="text-align:center;">Nenhum brinde configurado.</div>`;
+    return;
+  }
+  prizesWrap.innerHTML = data.prizes.map(p => {
+    const esgD = p.planned_today > 0 && p.remaining_today <= 0;
+    const esgT = p.remaining_total <= 0;
+    const esg  = esgD || esgT;
+    const pill = esgT ? `<span class="pill danger">Esgotado</span>`
+               : esgD ? `<span class="pill danger">Cota esgotada</span>`
+               : p.planned_today > 0 ? `<span class="pill green">${p.remaining_today} restantes hoje</span>`
+               : `<span class="pill blue">${p.remaining_total} no total</span>`;
+    return `<div class="prize-card${esg?' esgotado':''}">
+      <div class="dot" style="background:${p.color}"></div>
+      <div class="prize-info">
+        <div class="prize-name">${p.prize_name}</div>
+        <div class="prize-meta">${pill}</div>
+      </div>
+      <button class="btn-dist" id="btn-d-${p.prize_id}" onclick="distribuirManual(${p.prize_id})" ${esg?'disabled':''}>
+        Distribuir
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function atualizarPrizeLocal(prizeId) {
+  const p = eventData?.prizes.find(x => x.prize_id === prizeId);
+  if (!p) return;
+  if (p.remaining_today > 0) p.remaining_today--;
+  if (p.remaining_total > 0) p.remaining_total--;
+  p.distributed_today = (p.distributed_today || 0) + 1;
+}
+
+async function distribuirManual(prizeId) {
+  const btn = document.getElementById(`btn-d-${prizeId}`);
+  if (!btn || btn.disabled) return;
+  btn.disabled = true; btn.textContent = '...';
+  try {
+    const r = await fetch(`${BASE}/api/totem/${accessId}/distribute`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prize_id: prizeId })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Erro');
+    atualizarPrizeLocal(prizeId);
+    toast('✓ Distribuído!', 'success');
+  } catch(e) {
+    toast('Erro: '+e.message, 'error');
+    btn.disabled = false; btn.textContent = 'Distribuir';
+    return;
+  }
+  renderDistribuir();
+}
+
+// ══════════════════════════════════════════
+// ROLETA
+// ══════════════════════════════════════════
+const RCOLORS = ['#3b82f6','#ef4444','#f59e0b','#10b981','#8b5cf6','#ec4899','#06b6d4','#f97316'];
+let roletaRad = 0, roletaSpinning = false;
+
+function initRoleta() {
+  if (modoUnity) {
+    // Modo Unity: roleta só como animação, o servidor decide o brinde
+    document.getElementById('roleta-no-prizes').style.display = 'none';
+    document.getElementById('roleta-body').style.display = 'block';
+    drawRoletaUnity();
+  } else {
+    const disp = prizesDisponiveis();
+    document.getElementById('roleta-no-prizes').style.display = disp.length ? 'none' : 'block';
+    document.getElementById('roleta-body').style.display      = disp.length ? 'block' : 'none';
+    if (disp.length) drawRoleta(roletaRad, disp);
+  }
+}
+
+// Modo Unity: roleta decorativa com segmentos genéricos
+function drawRoletaUnity() {
+  const canvas = document.getElementById('roulette-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 260, cx = W/2, cy = W/2, R = cx - 3;
+  const labels = ['🎁','⭐','🏆','💫','🎀','✨'];
+  const N = labels.length;
+  const seg = (2*Math.PI)/N;
+  ctx.clearRect(0,0,W,W);
+  labels.forEach((lbl,i) => {
+    const s = roletaRad + i*seg, e = s+seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,s,e); ctx.closePath();
+    ctx.fillStyle = RCOLORS[i % RCOLORS.length]; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=2; ctx.stroke();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s+seg/2);
+    ctx.textAlign='right'; ctx.font='20px serif'; ctx.fillText(lbl, R-10, 7);
+    ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,20,0,2*Math.PI); ctx.fillStyle='#fff'; ctx.fill();
+}
+
+function drawRoleta(rad, prizes) {
+  const canvas = document.getElementById('roulette-canvas');
+  if (!canvas || !prizes.length) return;
+  const ctx = canvas.getContext('2d');
+  const W = 260, cx = W/2, cy = W/2, R = cx - 3;
+  const N = prizes.length, seg = (2*Math.PI)/N;
+  ctx.clearRect(0,0,W,W);
+  prizes.forEach((p,i) => {
+    const s = rad + i*seg, e = s+seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,s,e); ctx.closePath();
+    ctx.fillStyle = RCOLORS[i % RCOLORS.length]; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=2; ctx.stroke();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s+seg/2);
+    ctx.textAlign='right'; ctx.fillStyle='#fff';
+    ctx.font='bold 11px Inter,sans-serif';
+    const lbl = p.prize_name.length>13 ? p.prize_name.slice(0,13)+'…' : p.prize_name;
+    ctx.fillText(lbl, R-8, 4); ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,20,0,2*Math.PI); ctx.fillStyle='#fff'; ctx.fill();
+}
+
+async function spinRoleta() {
+  if (roletaSpinning) return;
+  roletaSpinning = true;
+  const btn = document.getElementById('btn-spin');
+  btn.disabled = true; btn.textContent = 'Girando...';
+  document.getElementById('roleta-result').textContent = '🎡 Girando...';
+
+  if (modoUnity) {
+    // Anima a roleta por 3s e depois chama o servidor
+    await animarRoletaLivre(3000);
+    try {
+      // Roleta manda um score aleatório — o servidor resolve a faixa
+      const scoreSimulado = Math.floor(Math.random() * 300);
+      const resp = await roundComplete('SCORE_ENDLESS', scoreSimulado, null,
+        'rol-' + Date.now());
+      exibirResultadoRodada(resp, 'roleta-result');
+    } catch(e) {
+      toast('Erro ao comunicar com servidor', 'error');
+      document.getElementById('roleta-result').textContent = '⚠️ Erro';
+    }
+  } else {
+    // Modo manual: sorteio local entre brindes disponíveis
+    const prizes = prizesDisponiveis();
+    if (!prizes.length) { roletaSpinning=false; btn.disabled=false; btn.textContent='Girar Roleta'; return; }
+    const winIdx = Math.floor(Math.random() * prizes.length);
+    const winner = prizes[winIdx];
+    const N = prizes.length;
+    const seg = (2*Math.PI)/N;
+    const midInWheel = winIdx*seg + seg/2;
+    const baseTarget = -Math.PI/2 - midInWheel;
+    const fullTurns  = 2*Math.PI*(5+Math.floor(Math.random()*3));
+    await animarRoleta(roletaRad, baseTarget + fullTurns, prizes);
+    roletaRad = baseTarget % (2*Math.PI);
+    drawRoleta(roletaRad, prizes);
+    document.getElementById('roleta-result').textContent = '🎉 ' + winner.prize_name;
+    try {
+      const r = await fetch(`${BASE}/api/totem/${accessId}/distribute`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ prize_id: winner.prize_id })
+      });
+      atualizarPrizeLocal(winner.prize_id);
+      renderDistribuir();
+      toast('🎡 '+winner.prize_name+' distribuído!', 'success');
+    } catch(e) { toast('Erro ao registrar', 'error'); }
+  }
+
+  roletaSpinning = false;
+  btn.disabled = false; btn.textContent = 'Girar Roleta';
+  initRoleta();
+}
+
+function animarRoleta(from, to, prizes) {
+  return new Promise(resolve => {
+    const dur = 3500 + Math.random()*1000;
+    const start = performance.now();
+    function ease(t) { return 1-Math.pow(1-t,4); }
+    function frame(now) {
+      const t = Math.min((now-start)/dur, 1);
+      roletaRad = from + (to-from)*ease(t);
+      drawRoleta(roletaRad, prizes);
+      if (t < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+function animarRoletaLivre(ms) {
+  return new Promise(resolve => {
+    const start = performance.now();
+    let angle = roletaRad;
+    function frame(now) {
+      angle += 0.06;
+      roletaRad = angle;
+      drawRoletaUnity();
+      if (now - start < ms) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+// ══════════════════════════════════════════
+// JACKPOT
+// ══════════════════════════════════════════
+const SYMS = [
+  { e:'🌹', n:'Rosa',     w:20, r:'comum'    },
+  { e:'💄', n:'Batom',    w:15, r:'comum'    },
+  { e:'✨', n:'Estrela',  w:12, r:'comum'    },
+  { e:'💎', n:'Diamante', w:5,  r:'raro'     },
+  { e:'👑', n:'Coroa',    w:2,  r:'lendário' },
+];
+let jpSpinning = false;
+
+function initJackpot() {
+  SYMS.forEach((_,r) => buildReel(r));
+  if (!modoUnity) {
+    const disp = prizesDisponiveis();
+    document.getElementById('jackpot-no-prizes').style.display = disp.length?'none':'block';
+    document.getElementById('btn-pull').disabled = !disp.length;
+  }
+}
+
+function buildReel(r) {
+  const track = document.getElementById(`reel-${r}`);
+  if (!track) return;
+  const list = [...SYMS,...SYMS,...SYMS];
+  track.innerHTML = list.map(s=>`<div class="reel-sym">${s.e}<small>${s.n}</small></div>`).join('');
+  track.style.transition = 'none';
+  track.style.transform  = 'translateY(0px)';
+}
+
+function wRandom() {
+  const total = SYMS.reduce((a,s)=>a+s.w,0);
+  let r = Math.random()*total;
+  for (const s of SYMS) { r -= s.w; if (r<=0) return s; }
+  return SYMS[SYMS.length-1];
+}
+
+function animateReel(r, targetSym, delay) {
+  return new Promise(resolve => {
+    const track  = document.getElementById(`reel-${r}`);
+    const symH   = 92;
+    const targetI = SYMS.findIndex(s=>s.e===targetSym.e);
+    const spins  = 10 + r*4 + Math.floor(Math.random()*3);
+    let step = 0;
+    function tick() {
+      step++;
+      const pos = step % SYMS.length;
+      const spd = step < spins-3 ? 65 : step < spins-1 ? 130 : 260;
+      track.style.transition = `transform ${spd}ms ease-in-out`;
+      track.style.transform  = `translateY(-${pos*symH}px)`;
+      if (step < spins) setTimeout(()=>requestAnimationFrame(tick), spd+10);
+      else setTimeout(()=>{
+        track.style.transition='transform 300ms ease-out';
+        track.style.transform =`translateY(-${targetI*symH}px)`;
+        setTimeout(resolve, 320);
+      }, spd+20);
+    }
+    setTimeout(()=>requestAnimationFrame(tick), delay);
+  });
+}
+
+async function pullJackpot() {
+  if (jpSpinning) return;
+  jpSpinning = true;
+  const btn = document.getElementById('btn-pull');
+  btn.disabled = true; btn.textContent = '⏳ Girando...';
+  document.getElementById('jackpot-result').textContent = '...';
+
+  const r0=wRandom(), r1=wRandom(), r2=wRandom();
+  await Promise.all([animateReel(0,r0,0), animateReel(1,r1,400), animateReel(2,r2,800)]);
+
+  if (modoUnity) {
+    // Calcula discreteOutcome com base nos símbolos (0 = sem par, 1 = par, 2 = trio comum, 3 = trio raro)
+    let discreteOutcome = 0;
+    if (r0.e===r1.e && r1.e===r2.e) {
+      discreteOutcome = (r0.r === 'lendário' || r0.r === 'raro') ? 3 : 2;
+    } else if (r0.e===r1.e || r1.e===r2.e || r0.e===r2.e) {
+      discreteOutcome = 1;
+    }
+    const label = ['Sem combinação','Par','Trio!','Jackpot!'];
+    document.getElementById('jackpot-result').textContent = label[discreteOutcome] + ' — aguardando servidor...';
+    try {
+      const resp = await roundComplete('JACKPOT_ROSACEA', null, discreteOutcome, 'jp-'+Date.now());
+      exibirResultadoRodada(resp, 'jackpot-result');
+    } catch(e) {
+      toast('Erro ao comunicar com servidor', 'error');
+    }
+  } else {
+    // Modo manual: lógica local de multiplicador
+    const prizes = prizesDisponiveis();
+    let mult = 1, msg = '';
+    if (r0.e===r1.e && r1.e===r2.e) {
+      mult = r0.r==='lendário'?5:3;
+      msg = mult===5 ? `🌟 JACKPOT! x${mult}!` : `🏆 Trio! x${mult}!`;
+    } else if (r0.e===r1.e||r1.e===r2.e||r0.e===r2.e) {
+      mult=2; msg=`🔶 Par! x${mult}`;
+    } else {
+      mult=1; msg=`🎁 1 brinde garantido`;
+    }
+    document.getElementById('jackpot-result').textContent = msg;
+    for (let i=0; i<mult && i<prizes.length; i++) {
+      await fetch(`${BASE}/api/totem/${accessId}/distribute`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ prize_id: prizes[i%prizes.length].prize_id })
+      });
+      atualizarPrizeLocal(prizes[i%prizes.length].prize_id);
+    }
+    renderDistribuir();
+    toast(`🎰 ${mult} brinde(s) distribuído(s)!`, 'success');
+  }
+
+  jpSpinning = false;
+  btn.disabled = false; btn.textContent = '🎰 Puxar Alavanca';
+  if (!modoUnity) initJackpot();
+}
+
+// ══════════════════════════════════════════
+// CHUVA DE ROSAS
+// ══════════════════════════════════════════
+let rActive=false, rScore=0, rTimer=30, rTarget=15;
+let rInt=null, rSpawn=null;
+const ROSAS=['🌹','🌸','🌺'];
+const LIXO =['🗑️','🧴','🥤','📦'];
+
+function checkRosasBrindes() {
+  if (modoUnity) return; // sempre disponível no modo Unity
+  const disp = prizesDisponiveis();
+  document.getElementById('rosas-no-prizes').style.display = disp.length?'none':'block';
+  const btn = document.getElementById('btn-rosas');
+  if (btn && !rActive) btn.disabled = !disp.length;
+}
+
+function startRosas() {
+  if (rActive) return;
+  if (!modoUnity && !prizesDisponiveis().length) return;
+  rActive=true; rScore=0; rTimer=30;
+  const arena = document.getElementById('roses-arena');
+  arena.className='arena'; arena.innerHTML='';
+  document.getElementById('r-score').textContent='0';
+  document.getElementById('r-timer').textContent='30';
+  document.getElementById('r-bar').style.width='100%';
+  document.getElementById('r-bar').className='bar';
+  const btn = document.getElementById('btn-rosas');
+  btn.disabled=true; btn.textContent='🌹 Jogando...';
+
+  rSpawn = setInterval(()=>spawnItem(), 650);
+  rInt   = setInterval(()=>{
+    rTimer--;
+    document.getElementById('r-timer').textContent=rTimer;
+    const pct=Math.round((rTimer/30)*100);
+    document.getElementById('r-bar').style.width=pct+'%';
+    if (rTimer<=10) document.getElementById('r-bar').className='bar danger';
+    if (rTimer<=0)  endRosas(false);
+  }, 1000);
+}
+
+function spawnItem() {
+  const arena=document.getElementById('roses-arena');
+  if (!arena||!rActive) return;
+  const isRosa=Math.random()<0.58;
+  const emoji=isRosa?ROSAS[Math.floor(Math.random()*ROSAS.length)]:LIXO[Math.floor(Math.random()*LIXO.length)];
+  const el=document.createElement('div');
+  el.className='fall'; el.textContent=emoji;
+  el.style.left=(5+Math.random()*86)+'%';
+  const spd=2.8+Math.random()*2+(30-rTimer)*0.07;
+  arena.appendChild(el);
+  let pos=-36;
+  const step=(arena.offsetHeight+50)/((spd*1000)/16);
+  const iv=setInterval(()=>{
+    if (!rActive){el.remove();clearInterval(iv);return;}
+    pos+=step; el.style.top=pos+'px';
+    if (pos>arena.offsetHeight+10){el.remove();clearInterval(iv);}
+  },16);
+  el.addEventListener('pointerdown',(e)=>{
+    e.preventDefault(); if (!rActive) return;
+    clearInterval(iv); el.remove();
+    addBurst(arena,parseFloat(el.style.left)/100*arena.offsetWidth,pos,isRosa);
+    if (isRosa){rScore++; if(rScore>=rTarget) endRosas(true);}
+    else rScore=Math.max(0,rScore-1);
+    document.getElementById('r-score').textContent=rScore;
+  });
+}
+
+function addBurst(arena,x,y,isRosa){
+  const b=document.createElement('div');
+  b.className='burst'; b.textContent=isRosa?'+1':'-1';
+  b.style.cssText=`left:${x}px;top:${y}px;color:${isRosa?'var(--green)':'var(--danger)'}`;
+  arena.appendChild(b);
+  setTimeout(()=>b.remove(),650);
+}
+
+async function endRosas(won) {
+  rActive=false;
+  clearInterval(rInt); clearInterval(rSpawn);
+  const arena=document.getElementById('roses-arena');
+  Array.from(arena.querySelectorAll('.fall')).forEach(el=>el.remove());
+
+  let giftName='';
+
+  if (modoUnity) {
+    // Envia rScore como pontuação para o servidor decidir o brinde
+    try {
+      const resp = await roundComplete('SCORE_ENDLESS', rScore, null, 'ros-'+Date.now());
+      if (resp.data?.gift) {
+        giftName = resp.data.gift.name;
+        toast('🌹 '+giftName+' distribuído!', 'success');
+      } else {
+        toast('Sem prêmio nesta rodada.', '');
+      }
+    } catch(e) { toast('Erro ao comunicar com servidor', 'error'); }
+  } else if (won) {
+    const prizes=prizesDisponiveis();
+    if (prizes.length) {
+      const p=prizes[0]; giftName=p.prize_name;
+      await fetch(`${BASE}/api/totem/${accessId}/distribute`,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({prize_id:p.prize_id})
+      });
+      atualizarPrizeLocal(p.prize_id);
+      renderDistribuir();
+      toast('🌹 '+giftName+' distribuído!', 'success');
+    }
+  }
+
+  const ov=document.createElement('div');
+  ov.className='arena-overlay';
+  const ganhou = modoUnity ? !!giftName : won;
+  ov.innerHTML = ganhou
+    ? `<div style="font-size:48px">🎉</div>
+       <div style="font-size:18px;font-weight:700;color:var(--green)">Você Ganhou!</div>
+       <div style="font-size:13px;color:var(--text2);text-align:center">${rScore} rosas${giftName?'<br><strong>'+giftName+'</strong>':''}</div>
+       <button class="btn-main" style="margin-top:8px;padding:10px 24px;width:auto" onclick="resetRosas()">Jogar Novamente</button>`
+    : `<div style="font-size:48px">😢</div>
+       <div style="font-size:18px;font-weight:700;color:var(--danger)">Tempo Esgotado!</div>
+       <div style="font-size:13px;color:var(--text2)">${rScore} de ${rTarget} rosas</div>
+       <button class="btn-main" style="margin-top:8px;padding:10px 24px;width:auto;background:var(--danger)" onclick="resetRosas()">Tentar Novamente</button>`;
+  arena.appendChild(ov);
+}
+
+function resetRosas(){
+  const arena=document.getElementById('roses-arena');
+  arena.className='arena arena-idle';
+  arena.innerHTML='<div style="font-size:14px;font-weight:600;color:var(--text2)">🌹 Pronta para jogar?</div><div style="font-size:12px;color:var(--text3)">Clique em Iniciar</div>';
+  rScore=0; rTimer=30;
+  document.getElementById('r-score').textContent='0';
+  document.getElementById('r-timer').textContent='30';
+  document.getElementById('r-bar').style.width='100%';
+  document.getElementById('r-bar').className='bar';
+  const btn=document.getElementById('btn-rosas');
+  if (btn){btn.disabled=false;btn.textContent='🌹 Iniciar Jogo';}
+  checkRosasBrindes();
+}
+</script>
+</body>
+</html>
