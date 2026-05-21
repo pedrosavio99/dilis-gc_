@@ -21,7 +21,6 @@
     body{font-family:'Syne',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
     ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:4px;}
 
-    /* LOGIN */
     #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eff6ff 0%,#f0f2f5 60%,#e0f2fe 100%);padding:2rem;}
     .login-box{width:100%;max-width:420px;background:#fff;border:1px solid var(--border2);border-radius:var(--r3);padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.07);}
     .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:2rem;}
@@ -40,7 +39,6 @@
     .login-btn:hover{background:#1648c0;}
     .login-err{font-size:13px;color:var(--danger);text-align:center;min-height:20px;}
 
-    /* APP */
     #app{display:none;min-height:100vh;}
     .sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:#fff;border-right:1px solid var(--border2);display:flex;flex-direction:column;z-index:100;}
     .sidebar-brand{padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border2);}
@@ -64,24 +62,60 @@
     .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
     .page-title{font-size:20px;font-weight:800;}.page-sub{font-size:12px;color:var(--text3);margin-top:2px;}
 
-    /* CARDS & GRIDS */
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+    /* ─── TOTEM CARD ─── */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+    .totem-card{background:#fff;border:1.5px solid var(--border2);border-radius:var(--r2);padding:0;transition:all .2s;overflow:hidden;}
+    .totem-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.07);}
+
+    /* Faixa colorida de status do evento */
+    .totem-event-strip{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border);}
+    .totem-event-strip.has-event{background:var(--accent-bg);color:var(--accent);}
+    .totem-event-strip.no-event{background:var(--bg4);color:var(--text3);}
+    .strip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    .totem-event-strip.has-event .strip-dot{background:var(--accent);}
+    .totem-event-strip.no-event .strip-dot{background:var(--text3);}
+    .strip-event-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .strip-badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;}
+    .totem-event-strip.has-event .strip-badge{background:var(--accent);color:#fff;}
+    .totem-event-strip.no-event .strip-badge{background:var(--bg5);color:var(--text3);}
+
+    .totem-card-body{padding:14px 16px;}
+    .totem-card-title{font-size:14px;font-weight:800;margin-bottom:3px;color:var(--text);}
+    .totem-card-loc{font-size:12px;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:4px;}
+
+    /* ID chip clicável */
+    .totem-id-chip{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:7px 10px;cursor:pointer;transition:all .15s;margin-bottom:12px;}
+    .totem-id-chip:hover{background:var(--accent-bg);border-color:rgba(26,86,219,.2);}
+    .totem-id-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;}
+    .totem-id-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent);flex:1;}
+    .totem-id-copy{font-size:11px;color:var(--text3);}
+
+    .totem-card-footer{display:flex;gap:7px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--border);background:var(--bg3);}
+
+    /* Botão ativações */
+    .btn-activations{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r);border:1px solid rgba(124,58,237,.3);background:var(--purple-bg);color:var(--purple);cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;transition:all .2s;}
+    .btn-activations:hover{background:var(--purple);color:#fff;border-color:var(--purple);}
+    .btn-activations:hover .act-count{background:rgba(255,255,255,.25);}
+    .act-count{background:var(--purple);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;min-width:18px;text-align:center;transition:background .2s;}
+    .btn-activations.disabled{opacity:.35;cursor:not-allowed;pointer-events:none;}
+
+    /* ─── FIM TOTEM CARD ─── */
+
     .card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:18px;transition:all .2s;}
     .card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.07);}
     .card-title{font-size:14px;font-weight:700;margin-bottom:6px;}
     .card-meta{font-size:12px;color:var(--text2);margin-bottom:4px;}
     .card-actions{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap;}
 
-    /* BADGES */
     .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
     .badge.green{background:var(--green-bg);color:var(--green);}
     .badge.yellow{background:var(--yellow-bg);color:var(--yellow);}
     .badge.danger{background:var(--danger-bg);color:var(--danger);}
     .badge.accent{background:var(--accent-bg);color:var(--accent);}
     .badge.purple{background:var(--purple-bg);color:var(--purple);}
+    .badge.gray{background:var(--bg4);color:var(--text3);}
     .badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
 
-    /* BUTTONS */
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:all .2s;}
     .btn:hover{background:var(--bg3);}
     .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -91,7 +125,6 @@
     .btn.sm{padding:5px 10px;font-size:12px;}.btn.xs{padding:3px 7px;font-size:11px;}
     .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
 
-    /* MODALS */
     .overlay{position:fixed;inset:0;background:rgba(17,24,39,0.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem;}
     .overlay.open{opacity:1;pointer-events:all;}
     .modal{background:#fff;border:1px solid var(--border2);border-radius:var(--r3);padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:modalIn .2s ease;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
@@ -100,14 +133,12 @@
     .modal-title{font-size:17px;font-weight:800;margin-bottom:18px;}
     .modal-footer{display:flex;gap:8px;margin-top:20px;justify-content:flex-end;}
 
-    /* FORMS */
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     .form-grid .span2{grid-column:span 2;}
     input[type="text"],input[type="email"],input[type="number"],input[type="date"],select,textarea{padding:9px 12px;border-radius:var(--r);border:1px solid var(--border2);background:#fff;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:all .2s;width:100%;}
     input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
     textarea{resize:vertical;min-height:72px;}
 
-    /* EVENTS */
     .event-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;transition:all .2s;margin-bottom:10px;}
     .event-card:hover{border-color:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,0.07);}
     .event-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
@@ -118,14 +149,12 @@
     .totem-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--text2);}
     .event-footer{padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap;background:var(--bg3);}
 
-    /* STATS */
     .stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
     .stat-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:12px 16px;flex:1;min-width:110px;}
     .stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:700;}
     .stat-val{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;}
     .stat-val.green{color:var(--green);}.stat-val.yellow{color:var(--yellow);}.stat-val.accent{color:var(--accent);}
 
-    /* CHIPS */
     .prize-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
     .prize-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;user-select:none;color:var(--text2);}
     .prize-chip:hover{border-color:var(--accent2);}
@@ -134,7 +163,6 @@
     .chip-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:0 2px;line-height:1;}
     .chip-del:hover{color:var(--danger);}
 
-    /* CALENDAR */
     .cal-wrap{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;}
     .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
     .cal-head{font-size:10px;color:var(--text3);text-align:center;padding:5px 0;font-weight:700;letter-spacing:.5px;}
@@ -154,10 +182,8 @@
     .day-bar-lbl.has{color:var(--text2);}
     .day-total{align-self:flex-end;font-size:9px;font-weight:700;color:var(--text2);background:var(--bg4);border-radius:4px;padding:1px 4px;}
     .exc-badge{position:absolute;top:3px;right:3px;background:var(--danger-bg);color:var(--danger);font-size:7px;padding:1px 4px;border-radius:4px;font-weight:700;}
-    .cal-controls{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
     input[type="month"]{padding:6px 10px;border-radius:var(--r);border:1px solid var(--border2);font-size:13px;background:#fff;color:var(--text);height:34px;font-family:inherit;}
 
-    /* DAY MODAL */
     .day-overlay{position:fixed;inset:0;background:rgba(17,24,39,.45);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:900;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem;}
     .day-overlay.open{opacity:1;pointer-events:all;}
     .day-modal{background:#fff;border:1px solid var(--border2);border-radius:var(--r3);width:100%;max-width:380px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.14);animation:modalIn .2s ease;}
@@ -177,7 +203,6 @@
     .toggle input:checked+.toggle-track{background:var(--danger);}
     .toggle input:checked+.toggle-track::before{transform:translateX(20px);}
 
-    /* STEPPERS */
     .stepper-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px;}
     .s-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
     .s-name{flex:1;font-size:13px;font-weight:600;}
@@ -191,19 +216,16 @@
     .add-prize-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;}
     .add-prize-row select{flex:1;min-width:160px;}.add-prize-row input[type="number"]{width:100px;}
 
-    /* TABLES */
     .dist-table{width:100%;border-collapse:collapse;}
     .dist-table th{text-align:left;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);}
     .dist-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);}
     .dist-table tr:hover td{background:var(--bg3);}
 
-    /* ACTIVATION KEY */
     .key-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:8px;}
     .key-text{flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);word-break:break-all;letter-spacing:.5px;}
     .key-masked{color:var(--text3);}
     .key-warning{font-size:11px;color:var(--yellow);background:var(--yellow-bg);border:1px solid rgba(180,83,9,.2);border-radius:var(--r);padding:8px 12px;margin-top:8px;}
 
-    /* TIERS */
     .tier-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:8px;}
     .tier-header{padding:12px 16px;display:flex;align-items:center;gap:10px;background:var(--bg3);border-bottom:1px solid var(--border);}
     .tier-order{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -215,7 +237,6 @@
     .pool-weight{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);background:#fff;border:1px solid var(--border);border-radius:4px;padding:1px 5px;}
     .no-prize-tier{font-size:12px;color:var(--text3);font-style:italic;}
 
-    /* METRICS */
     .metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px;}
     .metric-card{background:#fff;border:1px solid var(--border2);border-radius:var(--r2);padding:16px;}
     .metric-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;}
@@ -224,11 +245,9 @@
     .progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:8px;}
     .progress-fill{height:100%;border-radius:3px;transition:width .4s;}
 
-    /* TOAST */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--text);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 18px;font-size:13px;color:#fff;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2);}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-    /* EMPTY */
     .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
     .empty-state-icon{font-size:36px;margin-bottom:12px;}
     .empty-state-title{font-size:15px;font-weight:700;color:var(--text2);margin-bottom:6px;}
@@ -238,14 +257,27 @@
     .color-opt{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .15px;}
     .color-opt.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);}
 
-    /* TAB NAV */
     .tab-nav{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:3px;gap:2px;margin-bottom:16px;}
     .tab-btn{flex:1;padding:7px 12px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--text2);border-radius:5px;cursor:pointer;transition:all .15s;}
     .tab-btn.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.1);}
     .tab-content{display:none;}.tab-content.active{display:block;}
 
-    /* SECTION HEADERS */
     .section-hd{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+
+    /* ─── MODAL ATIVAÇÕES DO TOTEM ─── */
+    .act-modal-banner{border-radius:var(--r2);padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:4px;}
+    .act-modal-banner.has-event{background:linear-gradient(135deg,var(--accent-bg),var(--purple-bg));border:1px solid rgba(26,86,219,.15);}
+    .act-modal-banner.no-event{background:var(--bg4);border:1px solid var(--border2);}
+    .act-modal-banner-totem{font-size:15px;font-weight:800;color:var(--text);}
+    .act-modal-banner-event{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;}
+    .act-modal-banner.has-event .act-modal-banner-event{color:var(--accent);}
+    .act-modal-banner.no-event .act-modal-banner-event{color:var(--text3);}
+
+    .act-item{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;margin-bottom:8px;transition:border-color .2s;}
+    .act-item:hover{border-color:rgba(124,58,237,.3);}
+    .act-item-header{padding:11px 14px;display:flex;align-items:center;gap:9px;}
+    .act-item-name{flex:1;font-size:13px;font-weight:700;}
+    .act-item-key{padding:8px 14px 12px;border-top:1px solid var(--border);}
   </style>
 </head>
 <body>
@@ -309,7 +341,7 @@
     <!-- TOTENS -->
     <div id="page-totems" class="page">
       <div class="page-header">
-        <div><div class="page-title">Totens</div><div class="page-sub">Pontos de distribuição</div></div>
+        <div><div class="page-title">Totens</div><div class="page-sub">Pontos de distribuição e ativações</div></div>
         <button class="btn primary" onclick="openTotemModal()">+ Novo Totem</button>
       </div>
       <div id="totems-list" class="grid"></div>
@@ -374,15 +406,13 @@
   </div>
 </div>
 
-<!-- ═══ MODAL CONFIG EVENTO (distribição + ativações + faixas + métricas) ═══ -->
+<!-- ═══ MODAL CONFIG EVENTO ═══ -->
 <div id="config-modal" class="overlay" onclick="if(event.target===this)closeModal('config-modal')">
   <div class="modal xl">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div class="modal-title" id="config-modal-title" style="margin-bottom:0;">Configurar Evento</div>
       <button class="btn sm" onclick="closeModal('config-modal')">Fechar</button>
     </div>
-
-    <!-- Tabs -->
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchConfigTab('distribuicao',this)">📦 Distribuição</button>
       <button class="tab-btn" onclick="switchConfigTab('ativacoes',this)">🎮 Ativações</button>
@@ -391,7 +421,6 @@
       <button class="tab-btn" onclick="switchConfigTab('rodadas',this)">🎲 Rodadas</button>
     </div>
 
-    <!-- TAB: Distribuição -->
     <div id="cfg-tab-distribuicao" class="tab-content active">
       <div class="stat-row" id="config-stats"></div>
       <div class="section-hd">Brindes do Evento</div>
@@ -414,7 +443,6 @@
       <div class="cal-wrap"><div class="cal" id="config-cal"></div></div>
     </div>
 
-    <!-- TAB: Ativações -->
     <div id="cfg-tab-ativacoes" class="tab-content">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="section-hd" style="margin-bottom:0;">Ativações (Unity)</div>
@@ -423,7 +451,6 @@
       <div id="activations-list"></div>
     </div>
 
-    <!-- TAB: Faixas de Premiação -->
     <div id="cfg-tab-faixas" class="tab-content">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <div class="section-hd" style="margin-bottom:0;">Faixas por Tipo de Jogo</div>
@@ -441,7 +468,6 @@
       <div id="tiers-list"></div>
     </div>
 
-    <!-- TAB: Métricas -->
     <div id="cfg-tab-metricas" class="tab-content">
       <div class="section-hd">Hoje</div>
       <div id="metrics-today" class="metrics-grid"></div>
@@ -453,7 +479,6 @@
       </div>
     </div>
 
-    <!-- TAB: Rodadas Unity -->
     <div id="cfg-tab-rodadas" class="tab-content">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="section-hd" style="margin-bottom:0;">Rodadas via Unity</div>
@@ -462,10 +487,7 @@
       <div id="rounds-stats" class="stat-row" style="margin-bottom:16px;"></div>
       <div style="overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:var(--r2);">
         <table class="dist-table">
-          <thead><tr>
-            <th>Horário</th><th>Ativação</th><th>Game Type</th>
-            <th>Pontuação</th><th>Faixa</th><th>Brinde</th><th>Resultado</th>
-          </tr></thead>
+          <thead><tr><th>Horário</th><th>Ativação</th><th>Game Type</th><th>Pontuação</th><th>Faixa</th><th>Brinde</th><th>Resultado</th></tr></thead>
           <tbody id="rounds-tbody"></tbody>
         </table>
       </div>
@@ -473,7 +495,7 @@
   </div>
 </div>
 
-<!-- ═══ MODAL ATIVAÇÃO ═══ -->
+<!-- ═══ MODAL ATIVAÇÃO (do evento) ═══ -->
 <div id="activation-modal" class="overlay" onclick="if(event.target===this)closeModal('activation-modal')">
   <div class="modal">
     <div class="modal-title">Nova Ativação</div>
@@ -508,7 +530,7 @@
     <div class="section-hd">Ativação</div>
     <div style="font-size:14px;font-weight:700;margin-bottom:12px;" id="key-modal-actname"></div>
     <div class="key-box"><div class="key-text" id="key-modal-text"></div><button class="btn sm" onclick="copyKeyModal()">⎘ Copiar</button></div>
-    <div class="key-warning">⚠️ Não compartilhe esta chave publicamente. Ela autentica a ativação na API Unity.</div>
+    <div class="key-warning">⚠️ Não compartilhe esta chave publicamente.</div>
     <div class="modal-footer"><button class="btn primary" onclick="closeModal('key-modal')">Fechar</button></div>
   </div>
 </div>
@@ -528,10 +550,7 @@
           <option value="DISCRETE_SPIN">Discrete Spin</option>
         </select>
       </div>
-      <div class="form-field">
-        <label class="form-label">Ordem</label>
-        <input type="number" id="tier-order" min="0" value="0">
-      </div>
+      <div class="form-field"><label class="form-label">Ordem</label><input type="number" id="tier-order" min="0" value="0"></div>
       <div class="form-field">
         <label class="form-label">Tipo de Resultado</label>
         <select id="tier-outcome">
@@ -552,7 +571,7 @@
       <div class="form-field"><label class="form-label">Score Máximo</label><input type="number" id="tier-scoremax" min="0"></div>
     </div>
     <div id="tier-discrete-fields" style="display:none;margin-bottom:14px;">
-      <div class="form-field"><label class="form-label">Valor Discreto (ex: nº de rosáceas)</label><input type="number" id="tier-discreteval" min="0"></div>
+      <div class="form-field"><label class="form-label">Valor Discreto</label><input type="number" id="tier-discreteval" min="0"></div>
     </div>
     <div class="modal-footer"><button class="btn" onclick="closeModal('tier-modal')">Cancelar</button><button class="btn primary" onclick="saveTier()">Salvar Faixa</button></div>
   </div>
@@ -563,7 +582,7 @@
   <div class="modal wide">
     <div class="modal-title" id="pool-modal-title">Pool de Brindes</div>
     <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--text2);">
-      💡 <strong>Como funciona:</strong> Probabilidade do brinde = <code style="font-family:JetBrains Mono,monospace">peso_configurado × estoque_restante</code> dividido pela soma de todos no pool.
+      💡 Probabilidade = <code style="font-family:JetBrains Mono,monospace">peso × estoque_restante</code> / soma total
     </div>
     <div class="section-hd">Brindes nesta faixa</div>
     <div id="pool-current-gifts" style="margin-bottom:12px;"></div>
@@ -599,6 +618,64 @@
   </div>
 </div>
 
+<!-- ═══ MODAL ATIVAÇÕES DO TOTEM (NOVO) ═══ -->
+<div id="totem-act-modal" class="overlay" onclick="if(event.target===this)closeModal('totem-act-modal')">
+  <div class="modal">
+    <!-- Banner dinâmico -->
+    <div id="totem-act-banner" class="act-modal-banner"></div>
+
+    <!-- Sem evento associado -->
+    <div id="totem-act-no-event" style="display:none;text-align:center;padding:20px 0 8px;">
+      <div style="font-size:32px;margin-bottom:10px;">🔗</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text2);margin-bottom:6px;">Totem sem evento ativo</div>
+      <div style="font-size:12px;color:var(--text3);">Associe este totem a um evento ativo para criar ativações Unity.</div>
+    </div>
+
+    <!-- Com evento: conteúdo -->
+    <div id="totem-act-content" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="section-hd" style="margin-bottom:0;">Ativações</div>
+        <button class="btn sm primary" onclick="openTotemActivationForm()">+ Nova Ativação</button>
+      </div>
+
+      <!-- Formulário inline de nova ativação -->
+      <div id="totem-act-form" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:14px;">
+        <div class="section-hd" style="margin-bottom:10px;">Nova Ativação</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="form-field"><label class="form-label">Nome</label><input type="text" id="tam-act-name" placeholder="ex: Totem Principal"></div>
+          <div class="form-field"><label class="form-label">Localização</label><input type="text" id="tam-act-loc" placeholder="ex: Entrada do Shopping"></div>
+          <div class="form-field">
+            <label class="form-label">Tipo de Jogo</label>
+            <select id="tam-act-gametype">
+              <option value="SCORE_ENDLESS">Score Endless</option>
+              <option value="JACKPOT_ROSACEA">Jackpot Rosácea</option>
+              <option value="SCORE_TIMED">Score Timed</option>
+              <option value="DISCRETE_SPIN">Discrete Spin</option>
+            </select>
+          </div>
+          <!-- Key gerada -->
+          <div id="tam-act-key-result" style="display:none;">
+            <div class="section-hd" style="margin-bottom:6px;">Unity Key gerada</div>
+            <div class="key-box"><div class="key-text" id="tam-act-key-text"></div><button class="btn sm" onclick="copyTamKey()">⎘ Copiar</button></div>
+            <div class="key-warning" style="margin-top:8px;">⚠️ Guarde esta chave agora.</div>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button class="btn sm" onclick="closeTamActForm()">Cancelar</button>
+            <button class="btn sm primary" id="tam-act-save-btn" onclick="saveTamActivation()">Criar Ativação</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de ativações -->
+      <div id="totem-act-list"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn primary" onclick="closeModal('totem-act-modal')">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -611,12 +688,15 @@ let totems = [], prizes = [], events = [];
 let editTotemId = null, editPrizeId = null, editEventId = null;
 let selectedColor = COLORS[0];
 
-// ── CONFIG STATE ──
+// CONFIG STATE
 let cfgEventId = null, cfgPrizes = [], cfgDays = {}, cfgDistributed = {}, cfgExceptions = new Set();
 let cfgUnscheduled = {}, cfgActiveChip = null, cfgMonth = '', cfgDayEditing = null, cfgDayInputs = {};
 
-// ── TIERS STATE ──
+// TIERS STATE
 let currentTiers = [], poolTierId = null, poolTierName = '';
+
+// TOTEM ACTIVATIONS STATE
+let tamTotemId = null, tamEventId = null, tamTotemName = '';
 
 // ── UTILS ──
 function toast(msg) {
@@ -711,25 +791,86 @@ window.addEventListener('load', async () => {
 
 // ── TOTENS ──
 async function loadTotems() {
-  try { totems=await api('GET','/totems'); renderTotems(); } catch(e) { toast('Erro ao carregar totens'); }
+  try {
+    totems = await api('GET','/totems');
+    // Para cada totem, busca o evento ativo atual
+    const today = todayStr();
+    await Promise.all(totems.map(async t => {
+      try {
+        const evData = await api('GET', `/totem/${t.access_id}/today`);
+        t._activeEvent = evData.event || null;
+      } catch(_) { t._activeEvent = null; }
+    }));
+    renderTotems();
+  } catch(e) { toast('Erro ao carregar totens'); }
 }
+
 function renderTotems() {
-  const el=document.getElementById('totems-list');
-  if(!totems.length){el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📍</div><div class="empty-state-title">Nenhum totem</div></div>`;return;}
-  el.innerHTML=totems.map(t=>`<div class="card">
-    <div class="card-title">${t.name}</div>
-    <div class="card-meta">📍 ${t.location||'Sem localização'}</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;" onclick="navigator.clipboard.writeText('${t.access_id}').then(()=>toast('✓ ID copiado'))">
-      <span style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;">ID</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--accent);flex:1;">${t.access_id}</span>
-      <span style="font-size:10px;opacity:.4;">⎘</span>
-    </div>
-    <div class="card-actions">
-      <button class="btn sm" onclick="editTotem(${t.id})">Editar</button>
-      <button class="btn sm danger" onclick="deleteTotem(${t.id})">Deletar</button>
-    </div>
-  </div>`).join('');
+  const el = document.getElementById('totems-list');
+  if(!totems.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📍</div><div class="empty-state-title">Nenhum totem cadastrado</div></div>`;
+    return;
+  }
+  el.innerHTML = totems.map(t => {
+    const ev = t._activeEvent;
+    const hasEvent = !!ev;
+
+    const stripClass = hasEvent ? 'has-event' : 'no-event';
+    const stripDot = `<div class="strip-dot"></div>`;
+    const stripName = hasEvent
+      ? `<span class="strip-event-name">📅 ${ev.name}</span><span class="strip-badge">Ativo</span>`
+      : `<span class="strip-event-name">Sem evento ativo</span><span class="strip-badge">Inativo</span>`;
+
+    // Conta ativações — carregamos depois de abrir o modal, aqui mostramos placeholder
+    const actBtnClass = hasEvent ? 'btn-activations' : 'btn-activations disabled';
+    const actBtnTitle = hasEvent ? '' : 'title="Associe a um evento primeiro"';
+
+    return `<div class="totem-card">
+      <div class="totem-event-strip ${stripClass}">
+        ${stripDot}
+        ${stripName}
+      </div>
+      <div class="totem-card-body">
+        <div class="totem-card-title">${t.name}</div>
+        ${t.location ? `<div class="totem-card-loc">📍 ${t.location}</div>` : '<div class="totem-card-loc" style="color:var(--text3);">Sem localização</div>'}
+        <div class="totem-id-chip" onclick="navigator.clipboard.writeText('${t.access_id}').then(()=>toast('✓ ID copiado!'))">
+          <span class="totem-id-label">ID Totem</span>
+          <span class="totem-id-val">${t.access_id}</span>
+          <span class="totem-id-copy">⎘</span>
+        </div>
+      </div>
+      <div class="totem-card-footer">
+        <button class="${actBtnClass}" ${actBtnTitle} onclick="${hasEvent?`openTotemActModal(${t.id},'${t.name.replace(/'/g,"\\'")}',${ev.id},'${ev.name.replace(/'/g,"\\'")}')` : ''}">
+          🔑 Ativações <span class="act-count" id="act-count-${t.id}">...</span>
+        </button>
+        <button class="btn sm" onclick="editTotem(${t.id})">Editar</button>
+        <button class="btn sm danger" onclick="deleteTotem(${t.id})">Deletar</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Carrega contagem de ativações para cada totem com evento
+  totems.forEach(t => {
+    if(t._activeEvent) {
+      loadTotemActCount(t.id, t._activeEvent.id);
+    } else {
+      const el = document.getElementById(`act-count-${t.id}`);
+      if(el) el.textContent = '0';
+    }
+  });
 }
+
+async function loadTotemActCount(totemId, eventId) {
+  try {
+    const list = await api('GET', `/events/${eventId}/activations`);
+    const el = document.getElementById(`act-count-${totemId}`);
+    if(el) el.textContent = list.length;
+  } catch(_) {
+    const el = document.getElementById(`act-count-${totemId}`);
+    if(el) el.textContent = '?';
+  }
+}
+
 function openTotemModal(){editTotemId=null;document.getElementById('totem-modal-title').textContent='Novo Totem';document.getElementById('tm-name').value='';document.getElementById('tm-loc').value='';openModal('totem-modal');}
 function editTotem(id){const t=totems.find(x=>x.id===id);if(!t)return;editTotemId=id;document.getElementById('totem-modal-title').textContent='Editar Totem';document.getElementById('tm-name').value=t.name;document.getElementById('tm-loc').value=t.location||'';openModal('totem-modal');}
 async function saveTotem(){
@@ -738,6 +879,133 @@ async function saveTotem(){
   try{if(editTotemId)await api('PUT',`/totems/${editTotemId}`,{name,location});else await api('POST','/totems',{name,location});toast('✓ Salvo!');closeModal('totem-modal');loadTotems();}catch(e){toast('Erro: '+e.message);}
 }
 async function deleteTotem(id){if(!confirm('Deletar?'))return;try{await api('DELETE',`/totems/${id}`);toast('✓ Deletado');loadTotems();}catch(e){toast('Erro: '+e.message);}}
+
+// ═══════════════════════════════════════════════
+// MODAL DE ATIVAÇÕES DO TOTEM (NOVO)
+// ═══════════════════════════════════════════════
+async function openTotemActModal(totemId, totemName, eventId, eventName) {
+  tamTotemId = totemId;
+  tamEventId = eventId;
+  tamTotemName = totemName;
+
+  // Banner
+  const banner = document.getElementById('totem-act-banner');
+  banner.className = 'act-modal-banner ' + (eventId ? 'has-event' : 'no-event');
+  banner.innerHTML = `
+    <div class="act-modal-banner-totem">📍 ${totemName}</div>
+    ${eventId
+      ? `<div class="act-modal-banner-event">📅 ${eventName}</div>`
+      : `<div class="act-modal-banner-event" style="color:var(--text3);">Sem evento ativo</div>`}`;
+
+  document.getElementById('totem-act-no-event').style.display = eventId ? 'none' : 'block';
+  document.getElementById('totem-act-content').style.display = eventId ? 'block' : 'none';
+
+  // Reseta form
+  closeTamActForm();
+
+  openModal('totem-act-modal');
+
+  if(eventId) await loadTotemActList();
+}
+
+async function loadTotemActList() {
+  if(!tamEventId) return;
+  const container = document.getElementById('totem-act-list');
+  container.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px;">Carregando...</div>';
+  try {
+    const list = await api('GET', `/events/${tamEventId}/activations`);
+    // Atualiza badge do card
+    const badge = document.getElementById(`act-count-${tamTotemId}`);
+    if(badge) badge.textContent = list.length;
+
+    if(!list.length) {
+      container.innerHTML = `<div class="empty-state" style="padding:24px 0;">
+        <div class="empty-state-icon">🔑</div>
+        <div class="empty-state-title">Nenhuma ativação ainda</div>
+        <p style="font-size:12px;margin-top:4px;color:var(--text3);">Crie uma ativação para obter a Unity Key</p>
+      </div>`;
+      return;
+    }
+    const gtLabels = { SCORE_ENDLESS:'Score Endless', JACKPOT_ROSACEA:'Jackpot Rosácea', SCORE_TIMED:'Score Timed', DISCRETE_SPIN:'Discrete Spin' };
+    container.innerHTML = list.map(a => `
+      <div class="act-item">
+        <div class="act-item-header">
+          <span class="badge purple">🎮 ${gtLabels[a.game_type]||a.game_type}</span>
+          <div class="act-item-name">${a.name}</div>
+          ${a.location?`<span style="font-size:11px;color:var(--text3);">📍 ${a.location}</span>`:''}
+          <button class="btn xs danger" onclick="deleteTamActivation(${a.id})">✕</button>
+        </div>
+        <div class="act-item-key">
+          <div class="key-box" style="margin-top:0;">
+            <div class="key-text key-masked">${a.unity_key_masked}</div>
+            <button class="btn sm" onclick="showTamFullKey(${a.id},'${a.name.replace(/'/g,"\\'")}')">Ver Key</button>
+            <button class="btn sm" onclick="copyTamKeyFromList('${a.unity_key_masked}',${a.id},'${a.name.replace(/'/g,"\\'")}')">⎘ Copiar</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) { container.innerHTML = `<div style="font-size:13px;color:var(--danger);text-align:center;padding:16px;">Erro ao carregar ativações</div>`; }
+}
+
+function openTotemActivationForm() {
+  document.getElementById('tam-act-name').value = '';
+  document.getElementById('tam-act-loc').value = '';
+  document.getElementById('tam-act-gametype').value = 'SCORE_ENDLESS';
+  document.getElementById('tam-act-key-result').style.display = 'none';
+  document.getElementById('tam-act-save-btn').style.display = '';
+  document.getElementById('totem-act-form').style.display = 'block';
+}
+
+function closeTamActForm() {
+  document.getElementById('totem-act-form').style.display = 'none';
+  document.getElementById('tam-act-key-result').style.display = 'none';
+  document.getElementById('tam-act-save-btn').style.display = '';
+}
+
+async function saveTamActivation() {
+  const name = document.getElementById('tam-act-name').value.trim();
+  const location = document.getElementById('tam-act-loc').value.trim();
+  const game_type = document.getElementById('tam-act-gametype').value;
+  if(!name){toast('Nome obrigatório');return;}
+  try {
+    const r = await api('POST', `/events/${tamEventId}/activations`, { name, location, game_type });
+    document.getElementById('tam-act-key-text').textContent = r.unity_key;
+    document.getElementById('tam-act-key-result').style.display = 'block';
+    document.getElementById('tam-act-save-btn').style.display = 'none';
+    toast('✓ Ativação criada!');
+    await loadTotemActList();
+  } catch(e) { toast('Erro: '+e.message); }
+}
+
+function copyTamKey() {
+  const key = document.getElementById('tam-act-key-text').textContent;
+  navigator.clipboard.writeText(key).then(()=>toast('✓ Key copiada!'));
+}
+
+async function showTamFullKey(actId, actName) {
+  try {
+    const r = await api('GET', `/events/${tamEventId}/activations/${actId}/key`);
+    document.getElementById('key-modal-actname').textContent = actName;
+    document.getElementById('key-modal-text').textContent = r.unity_key;
+    openModal('key-modal');
+  } catch(e) { toast('Erro ao buscar key'); }
+}
+
+async function copyTamKeyFromList(masked, actId, actName) {
+  // Abre modal de key completa e copia
+  try {
+    const r = await api('GET', `/events/${tamEventId}/activations/${actId}/key`);
+    navigator.clipboard.writeText(r.unity_key).then(()=>toast('✓ Key de "'+actName+'" copiada!'));
+  } catch(e) { toast('Erro ao buscar key'); }
+}
+
+async function deleteTamActivation(id) {
+  if(!confirm('Deletar esta ativação?')) return;
+  try {
+    await api('DELETE', `/events/${tamEventId}/activations/${id}`);
+    toast('✓ Deletada');
+    await loadTotemActList();
+  } catch(e) { toast('Erro: '+e.message); }
+}
 
 // ── BRINDES ──
 async function loadPrizes(){try{prizes=await api('GET','/prizes');renderPrizes();}catch(e){toast('Erro');}}
@@ -850,7 +1118,6 @@ async function openConfigModal(eventId) {
   const now=new Date();
   cfgMonth=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   document.getElementById('config-month').value=cfgMonth;
-  // Reset tabs
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===0));
   try { cfgPrizes=await api('GET',`/events/${cfgEventId}/prizes`); if(cfgPrizes.length) cfgActiveChip=cfgPrizes[0].id; } catch(_) {}
@@ -1147,9 +1414,7 @@ async function limparMes() {
   } catch(e) { toast('Erro: '+e.message); }
 }
 
-// ══════════════════════════════════════════════
-// ATIVAÇÕES
-// ══════════════════════════════════════════════
+// ── ATIVAÇÕES (do modal de evento) ──
 async function loadActivations() {
   try {
     const list = await api('GET', `/events/${cfgEventId}/activations`);
@@ -1232,9 +1497,7 @@ async function deleteActivation(id) {
   } catch(e) { toast('Erro: '+e.message); }
 }
 
-// ══════════════════════════════════════════════
-// FAIXAS DE PREMIAÇÃO
-// ══════════════════════════════════════════════
+// ── FAIXAS ──
 async function loadTiers() {
   try {
     const gt = document.getElementById('tiers-gametype-filter').value;
@@ -1248,18 +1511,13 @@ function renderTiers() {
   const gt = document.getElementById('tiers-gametype-filter')?.value || '';
   const filtered = gt ? currentTiers.filter(t=>t.game_type===gt) : currentTiers;
   const el = document.getElementById('tiers-list');
-
   if (!filtered.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏆</div><div class="empty-state-title">Nenhuma faixa configurada</div><p style="font-size:12px;margin-top:4px;">Crie faixas para definir as regras de pontuação</p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏆</div><div class="empty-state-title">Nenhuma faixa configurada</div></div>`;
     return;
   }
-
   const gtLabels = { SCORE_ENDLESS:'Score Endless', JACKPOT_ROSACEA:'Jackpot Rosácea', SCORE_TIMED:'Score Timed', DISCRETE_SPIN:'Discrete Spin' };
-
-  // Agrupar por game_type
   const byGT = {};
   filtered.forEach(t => { if(!byGT[t.game_type]) byGT[t.game_type]=[]; byGT[t.game_type].push(t); });
-
   el.innerHTML = Object.entries(byGT).map(([gt, tiers]) => `
     <div style="margin-bottom:20px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
@@ -1277,7 +1535,7 @@ function renderTiers() {
             <div class="tier-order">${t.sort_order}</div>
             <div class="tier-name">${t.name}</div>
             <div class="tier-band">${bandStr}</div>
-            ${isNoPrize ? '<span class="badge" style="background:var(--bg4);color:var(--text3);">Participação</span>' : ''}
+            ${isNoPrize ? '<span class="badge gray">Participação</span>' : ''}
             <div style="display:flex;gap:6px;margin-left:auto;">
               ${!isNoPrize?`<button class="btn xs primary" onclick="openPoolModal(${t.id},'${t.name.replace(/'/g,"\\'")}')">Pool (${gifts.length})</button>`:''}
               <button class="btn xs danger" onclick="deleteTier(${t.id})">✕</button>
@@ -1293,7 +1551,7 @@ function renderTiers() {
                   <span class="pool-weight">peso ${g.configured_weight}</span>
                 </div>`).join('')}
             </div>
-          </div>` : (!isNoPrize ? `<div class="tier-body"><div class="no-prize-tier">Nenhum brinde no pool ainda — clique em "Pool" para adicionar</div></div>` : '')}
+          </div>` : (!isNoPrize ? `<div class="tier-body"><div class="no-prize-tier">Nenhum brinde no pool ainda</div></div>` : '')}
         </div>`;
       }).join('')}
     </div>`).join('');
@@ -1306,14 +1564,10 @@ function onBandTypeChange() {
 }
 
 function openTierModal() {
-  document.getElementById('tier-modal-title').textContent='Nova Faixa';
-  document.getElementById('tier-name').value='';
+  ['tier-name','tier-scoremin','tier-scoremax','tier-discreteval'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('tier-order').value='0';
   document.getElementById('tier-outcome').value='PRIZE';
   document.getElementById('tier-bandtype').value='interval';
-  document.getElementById('tier-scoremin').value='';
-  document.getElementById('tier-scoremax').value='';
-  document.getElementById('tier-discreteval').value='';
   onBandTypeChange();
   openModal('tier-modal');
 }
@@ -1354,15 +1608,12 @@ async function openPoolModal(tierId, tierName) {
 }
 
 async function refreshPoolModal() {
-  // Brindes já no pool (vem do tier com gifts)
   const tier = currentTiers.find(t=>t.id===poolTierId);
   const gifts = tier?.gifts || [];
-
   const currentEl = document.getElementById('pool-current-gifts');
   if(!gifts.length) {
     currentEl.innerHTML = '<span style="font-size:12px;color:var(--text3);">Nenhum brinde no pool ainda.</span>';
   } else {
-    // Calcular probabilidades estimadas
     const totalPeso = gifts.reduce((s,g) => s + (parseFloat(g.configured_weight)||1), 0);
     currentEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:6px;">
       ${gifts.map(g => {
@@ -1380,8 +1631,6 @@ async function refreshPoolModal() {
       }).join('')}
     </div>`;
   }
-
-  // Popula select de brindes disponíveis
   const usedIds = gifts.map(g=>g.event_prize_id);
   const available = cfgPrizes.filter(p=>!usedIds.includes(p.id));
   const sel = document.getElementById('pool-prize-sel');
@@ -1397,7 +1646,6 @@ async function addGiftToPool() {
   try {
     await api('POST', `/events/${cfgEventId}/tiers/${poolTierId}/gifts`, { event_prize_id: epId, configured_weight: weight });
     toast('✓ Adicionado ao pool!');
-    // Recarrega tiers e atualiza modal
     currentTiers = await api('GET', `/events/${cfgEventId}/tiers`);
     await refreshPoolModal();
     renderTiers();
@@ -1414,14 +1662,10 @@ async function removeFromPool(tgId) {
   } catch(e) { toast('Erro: '+e.message); }
 }
 
-// ══════════════════════════════════════════════
-// MÉTRICAS
-// ══════════════════════════════════════════════
+// ── MÉTRICAS ──
 async function loadMetrics() {
   try {
     const data = await api('GET', `/events/${cfgEventId}/metrics`);
-
-    // Hoje
     const todayEl = document.getElementById('metrics-today');
     if(!data.today.length) {
       todayEl.innerHTML='<div style="font-size:12px;color:var(--text3);">Nenhuma distribuição hoje.</div>';
@@ -1436,8 +1680,6 @@ async function loadMetrics() {
           <div class="metric-sub">distribuídos hoje</div>
         </div>`).join('');
     }
-
-    // Estoque
     const stockEl = document.getElementById('metrics-stock');
     stockEl.innerHTML = `<div style="background:#fff;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;">
       <table class="dist-table" style="margin:0;">
@@ -1455,8 +1697,6 @@ async function loadMetrics() {
         </tbody>
       </table>
     </div>`;
-
-    // Histórico
     const tbody = document.getElementById('metrics-history-tbody');
     if(!data.history.length) {
       tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--text3);">Nenhum registro ainda.</td></tr>';
@@ -1480,15 +1720,11 @@ async function loadDistributions() {
   }catch(e){toast('Erro');}
 }
 
-// ══════════════════════════════════════════════
-// RODADAS UNITY
-// ══════════════════════════════════════════════
+// ── RODADAS UNITY ──
 async function loadRounds() {
   try {
     const rounds = await api('GET', `/events/${cfgEventId}/rounds`);
     const gtLabels = { SCORE_ENDLESS:'Score Endless', JACKPOT_ROSACEA:'Jackpot Rosácea', SCORE_TIMED:'Score Timed', DISCRETE_SPIN:'Discrete Spin' };
-
-    // Stats
     const total = rounds.length;
     const withPrize = rounds.filter(r => r.had_prize).length;
     const noPrize = total - withPrize;
@@ -1497,13 +1733,11 @@ async function loadRounds() {
       <div class="stat-card"><div class="stat-label">Com prêmio</div><div class="stat-val green">${withPrize}</div></div>
       <div class="stat-card"><div class="stat-label">Sem prêmio</div><div class="stat-val yellow">${noPrize}</div></div>
       <div class="stat-card"><div class="stat-label">Taxa de prêmio</div><div class="stat-val" style="color:var(--purple);">${total>0?(withPrize/total*100).toFixed(1):0}%</div></div>`;
-
     const tbody = document.getElementById('rounds-tbody');
     if (!rounds.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3);">Nenhuma rodada registrada ainda.<br><span style="font-size:11px;">As rodadas aparecem aqui quando a Unity chama POST /api/v2/unity/round/complete</span></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3);">Nenhuma rodada registrada ainda.</td></tr>';
       return;
     }
-
     tbody.innerHTML = rounds.map(r => {
       const dt = new Date(r.created_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
       const scoreStr = r.score != null ? r.score : (r.discrete_outcome != null ? `${r.discrete_outcome} 🌹` : '—');
@@ -1514,7 +1748,7 @@ async function loadRounds() {
         <td style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;">${dt}</td>
         <td style="font-size:12px;">${r.activation_name||'—'}</td>
         <td><span class="badge purple">${gtLabels[r.game_type]||r.game_type}</span></td>
-        <td style="font-family:'JetBrains Mono',monospace;font-weight:700;">${scoreStr}</td>
+        <td style="font-family:JetBrains Mono,monospace;font-weight:700;">${scoreStr}</td>
         <td style="font-size:12px;">${r.tier_label||'<span style="color:var(--text3);">—</span>'}</td>
         <td style="font-size:12px;font-weight:600;">${r.gift_name||'<span style="color:var(--text3);">—</span>'}</td>
         <td>${resultBadge}</td>
